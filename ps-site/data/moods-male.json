@@ -1,0 +1,660 @@
+{
+  "version": 1,
+  "gender": "male",
+  "note": "20 мужских эмоциональных образов. Это описания желаемого запаха, а не конкретные парфюмы. profile: target — желаемое значение 0–5, weight — важность 0–1. avoid: max — верхняя граница, выше которой аромат хуже подходит образу. Эффекты уточняющих вопросов — сдвиг target.",
+  "moods": [
+    {
+      "id": "m-expensive-clean",
+      "title": "Дорогая чистота",
+      "hint": "Прохладная свежесть, белый мускус, светлое дерево",
+      "description": "Прохладное утро, рубашка, которую только что достали из чехла, тихий холл хорошего отеля. Свежесть здесь не мыльная и не спортивная: она быстро смягчается и уходит в светлое дерево и мускус, который держится близко к коже. Так пахнет человек, у которого всё под контролем и которому не нужно это доказывать.",
+      "profile": {
+        "fresh": { "target": 4, "weight": 1.0 },
+        "musky": { "target": 3, "weight": 0.8 },
+        "woody": { "target": 2, "weight": 0.6 },
+        "sweet": { "target": 1, "weight": 0.6 },
+        "citrus": { "target": 2, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.5 },
+        "sillage": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "leather": { "max": 1 }, "oud": { "max": 0 }, "smoky": { "max": 1 }, "sweet": { "max": 2 } },
+      "tags": ["clean", "luxury", "restrained", "elegant", "morning"],
+      "seasons": ["spring", "summer", "autumn"],
+      "occasions": ["office", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "freshness-kind",
+          "text": "Какой должна быть свежесть?",
+          "options": [
+            { "id": "citrus", "label": "Цитрусовая, как бергамот", "effect": { "citrus": 2 } },
+            { "id": "air", "label": "Прохладный воздух и мускус", "effect": { "musky": 1, "citrus": -1 } },
+            { "id": "any", "label": "Не важно", "effect": {} }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-clean-linen", "m-modern-minimal", "m-cold-elegance", "m-skin-scent", "m-young-luxury"],
+      "conflictsWith": ["m-bar-midnight", "m-fireplace"]
+    },
+    {
+      "id": "m-night-city",
+      "title": "Ночной мегаполис",
+      "hint": "Прохлада, тёмное дерево, немного пряностей и минералов",
+      "description": "Мокрый асфальт отражает фары, из дверей ресторана тянет теплом, а ветер между башнями всё равно холодный. Весь аромат построен на этом контрасте: прохладный, почти металлический верх и тёмная сухая древесина внизу. Сладости немного — ровно столько, чтобы не казаться жёстким.",
+      "profile": {
+        "woody": { "target": 4, "weight": 0.9 },
+        "fresh": { "target": 3, "weight": 0.7 },
+        "spicy": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 2, "weight": 0.6 },
+        "mineral": { "target": 2, "weight": 0.4 },
+        "amber": { "target": 2, "weight": 0.3 },
+        "smoky": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.5 },
+        "sillage": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 3 }, "floral": { "max": 2 } },
+      "tags": ["urban", "mysterious", "confident", "evening", "deep"],
+      "seasons": ["autumn", "winter", "spring"],
+      "occasions": ["evening", "date", "party"],
+      "clarifyingQuestions": [
+        {
+          "id": "cool-or-warm",
+          "text": "Больше прохлады или больше тёплой глубины?",
+          "options": [
+            { "id": "cool", "label": "Прохлада, камень, ветер", "effect": { "fresh": 1, "mineral": 1 } },
+            { "id": "warm", "label": "Тепло и мягкая сладость", "effect": { "amber": 1, "sweet": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-after-rain", "m-dark-suit", "m-cold-elegance", "m-young-luxury"],
+      "conflictsWith": ["m-fruity-fresh", "m-sport-fresh"]
+    },
+    {
+      "id": "m-warm-vanilla",
+      "title": "Тёплая ваниль",
+      "hint": "Ваниль, амбра, мягкие пряности",
+      "description": "Свитер грубой вязки, тёплая ладонь на чашке, свет лампы в окне. Ваниль здесь не кондитерская: её держат сухие пряности, амбра и дерево, поэтому сладость ощущается как тепло, а не как десерт. Лучше всего раскрывается в холод и звучит спокойно, но заметно.",
+      "profile": {
+        "vanilla": { "target": 4, "weight": 1.0 },
+        "sweet": { "target": 4, "weight": 0.9 },
+        "amber": { "target": 3, "weight": 0.6 },
+        "spicy": { "target": 2, "weight": 0.5 },
+        "woody": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 1, "weight": 0.4 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "gourmand": { "max": 3 } },
+      "tags": ["warm", "cozy", "sensual", "comfort"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["daily", "date", "evening", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "vanilla-kind",
+          "text": "Какой должна быть ваниль?",
+          "options": [
+            { "id": "creamy", "label": "Мягкая, сливочная", "effect": { "creamy": 2, "spicy": -1 } },
+            { "id": "spicy", "label": "С пряностями и дымком", "effect": { "spicy": 1, "smoky": 1 } }
+          ]
+        },
+        {
+          "id": "sweetness",
+          "text": "Насколько сладко?",
+          "options": [
+            { "id": "low", "label": "Едва заметно", "effect": { "sweet": -1 } },
+            { "id": "mid", "label": "Ощутимо, но не приторно", "effect": {} },
+            { "id": "high", "label": "Чем слаще, тем лучше", "effect": { "sweet": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-fireplace", "m-evening-trail", "m-bar-midnight", "m-coffee-books"],
+      "conflictsWith": ["m-sport-fresh", "m-green-tea", "m-sea-morning", "m-after-rain", "m-cold-elegance", "m-modern-minimal"]
+    },
+    {
+      "id": "m-modern-minimal",
+      "title": "Современный минимализм",
+      "hint": "Сухое светлое дерево, ирис, прозрачный мускус",
+      "description": "Бетон, стекло, светлая древесина и ни одной лишней детали. Несколько точных штрихов — сухое дерево, прохладный ирис, чуть-чуть перца — и больше ничего. Он не стремится понравиться сразу, но к середине дня становится понятно, почему его хочется носить снова.",
+      "profile": {
+        "woody": { "target": 4, "weight": 0.9 },
+        "musky": { "target": 3, "weight": 0.6 },
+        "fresh": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 0, "weight": 0.7 },
+        "iris": { "target": 2, "weight": 0.4 },
+        "mineral": { "target": 2, "weight": 0.3 },
+        "spicy": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.5 },
+        "sillage": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "vanilla": { "max": 2 } },
+      "tags": ["minimal", "restrained", "urban", "elegant", "calm"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["office", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "minimal-focus",
+          "text": "Что тебе ближе?",
+          "options": [
+            { "id": "wood", "label": "Сухое светлое дерево", "effect": { "woody": 1 } },
+            { "id": "iris", "label": "Прохладный ирис", "effect": { "iris": 1, "powdery": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-expensive-clean", "m-cold-elegance", "m-skin-scent"],
+      "conflictsWith": ["m-warm-vanilla", "m-bar-midnight", "m-fruity-fresh"]
+    },
+    {
+      "id": "m-coffee-books",
+      "title": "Кофе и книги",
+      "hint": "Кофе, сухое дерево, ваниль, пряности",
+      "description": "Читальный зал в дождливый день: деревянные полки, запах бумаги и кофе, остывающий рядом с раскрытой книгой. Горечь обжаренных зёрен смягчена ванилью и сухим деревом — тепло, но без приторности. Для того, кто любит тишину и долгие разговоры.",
+      "profile": {
+        "coffee": { "target": 4, "weight": 1.0 },
+        "woody": { "target": 3, "weight": 0.7 },
+        "sweet": { "target": 3, "weight": 0.6 },
+        "vanilla": { "target": 2, "weight": 0.4 },
+        "spicy": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 1, "weight": 0.4 },
+        "leather": { "target": 1, "weight": 0.2 },
+        "intensity": { "target": 3, "weight": 0.3 }
+      },
+      "avoid": {},
+      "tags": ["cozy", "warm", "calm", "nostalgic", "deep"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["daily", "office", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "coffee-kind",
+          "text": "Кофе скорее горький или сладкий?",
+          "options": [
+            { "id": "bitter", "label": "Горький, как эспрессо", "effect": { "sweet": -1, "woody": 1 } },
+            { "id": "sweet", "label": "Сладкий, как латте с ванилью", "effect": { "sweet": 1, "vanilla": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-warm-vanilla", "m-fireplace", "m-autumn-park", "m-bar-midnight"],
+      "conflictsWith": ["m-sport-fresh", "m-fruity-fresh", "m-sea-morning"]
+    },
+    {
+      "id": "m-sea-morning",
+      "title": "Утро у моря",
+      "hint": "Морской воздух, соль, цитрус, светлое дерево",
+      "description": "Шесть утра, пляж ещё пустой, на губах соль, а ветер несёт запах водорослей и нагретых досок причала. Свежесть солёная и чуть горьковатая, без приторной «морской» отдушки. Под ней проступает светлое дерево, которое удерживает аромат до вечера.",
+      "profile": {
+        "fresh": { "target": 5, "weight": 1.0 },
+        "aquatic": { "target": 4, "weight": 0.9 },
+        "salty": { "target": 3, "weight": 0.6 },
+        "citrus": { "target": 2, "weight": 0.4 },
+        "woody": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 0, "weight": 0.6 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 } },
+      "tags": ["fresh", "nature", "light", "morning", "calm"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "vacation", "sport"],
+      "clarifyingQuestions": [
+        {
+          "id": "sea-or-citrus",
+          "text": "Что должно звучать первым?",
+          "options": [
+            { "id": "sea", "label": "Море и соль", "effect": { "aquatic": 1, "salty": 1 } },
+            { "id": "citrus", "label": "Цитрус", "effect": { "citrus": 2, "aquatic": -1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-sport-fresh", "m-hot-air", "m-green-tea", "m-after-rain"],
+      "conflictsWith": ["m-warm-vanilla", "m-coffee-books", "m-fireplace", "m-bar-midnight", "m-dark-suit"]
+    },
+    {
+      "id": "m-autumn-park",
+      "title": "Осенний парк",
+      "hint": "Палая листва, влажная земля, дерево, лёгкая пряность",
+      "description": "Октябрь, под ногами шуршат листья, воздух пахнет сырой землёй и дымком из соседнего сада. Землистый и древесный, с тёплой пряностью и лёгкой горчинкой. В нём есть меланхолия, но не грусть: скорее удовольствие от долгой прогулки в пальто.",
+      "profile": {
+        "woody": { "target": 4, "weight": 0.9 },
+        "earthy": { "target": 3, "weight": 0.7 },
+        "green": { "target": 2, "weight": 0.5 },
+        "spicy": { "target": 2, "weight": 0.5 },
+        "fresh": { "target": 2, "weight": 0.4 },
+        "smoky": { "target": 1, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.4 },
+        "intensity": { "target": 3, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 3 } },
+      "tags": ["nature", "nostalgic", "calm", "deep", "cozy"],
+      "seasons": ["autumn"],
+      "occasions": ["daily", "office"],
+      "clarifyingQuestions": [
+        {
+          "id": "smoke",
+          "text": "Дымок от костра — хорошо или лишнее?",
+          "options": [
+            { "id": "yes", "label": "Хорошо", "effect": { "smoky": 1 } },
+            { "id": "no", "label": "Лишнее", "effect": { "smoky": -1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-coffee-books", "m-after-rain", "m-fireplace", "m-green-tea"],
+      "conflictsWith": ["m-fruity-fresh", "m-sport-fresh", "m-young-luxury"]
+    },
+    {
+      "id": "m-bar-midnight",
+      "title": "Бар после полуночи",
+      "hint": "Ром или коньяк, пряности, тёмное дерево, тёплая амбра",
+      "description": "Приглушённый свет, бармен протирает бокалы, в стакане тает лёд, а от стойки пахнет деревом и специями. Алкогольная нота — коньяк, ром или виски — согрета корицей, амброй и тёмной древесиной. Звучит густо и уверенно; ему нужен вечер, а не офисное утро.",
+      "profile": {
+        "boozy": { "target": 4, "weight": 1.0 },
+        "spicy": { "target": 3, "weight": 0.7 },
+        "woody": { "target": 3, "weight": 0.6 },
+        "sweet": { "target": 3, "weight": 0.6 },
+        "amber": { "target": 3, "weight": 0.5 },
+        "vanilla": { "target": 2, "weight": 0.3 },
+        "fresh": { "target": 0, "weight": 0.4 },
+        "intensity": { "target": 4, "weight": 0.5 },
+        "sillage": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": {},
+      "tags": ["evening", "sensual", "warm", "mysterious", "bold"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["evening", "date", "party"],
+      "clarifyingQuestions": [
+        {
+          "id": "drink",
+          "text": "Какой напиток ближе?",
+          "options": [
+            { "id": "cognac", "label": "Коньяк или виски — сухо и благородно", "effect": { "sweet": -1, "woody": 1 } },
+            { "id": "rum", "label": "Ром — с карамельной сладостью", "effect": { "sweet": 1, "vanilla": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-warm-vanilla", "m-coffee-books", "m-fireplace", "m-evening-trail", "m-dark-suit"],
+      "conflictsWith": ["m-expensive-clean", "m-modern-minimal", "m-sea-morning", "m-sport-fresh", "m-clean-linen", "m-green-tea", "m-after-rain", "m-cold-elegance", "m-skin-scent"]
+    },
+    {
+      "id": "m-dark-suit",
+      "title": "Тёмный костюм",
+      "hint": "Ирис, тёмное дерево, сдержанная кожа, перец",
+      "description": "Шерстяная ткань, белая рубашка, туфли, начищенные с вечера. Собран он так же строго: прохладный ирис и перец сверху, тёмное дерево и едва заметная мягкая кожа в основе. Ничего кричащего — просто ощущение, что этот человек пришёл по делу.",
+      "profile": {
+        "woody": { "target": 4, "weight": 0.8 },
+        "iris": { "target": 3, "weight": 0.6 },
+        "spicy": { "target": 2, "weight": 0.5 },
+        "leather": { "target": 2, "weight": 0.5 },
+        "powdery": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "intensity": { "target": 3, "weight": 0.4 },
+        "sillage": { "target": 3, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 3 } },
+      "tags": ["elegant", "confident", "restrained", "urban", "classic"],
+      "seasons": ["autumn", "winter", "spring"],
+      "occasions": ["office", "evening", "special"],
+      "clarifyingQuestions": [
+        {
+          "id": "leather",
+          "text": "Кожа в аромате уместна?",
+          "options": [
+            { "id": "yes", "label": "Да, мягкая и сдержанная", "effect": { "leather": 1 } },
+            { "id": "no", "label": "Лучше без неё", "effect": { "leather": -2 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-night-city", "m-bar-midnight", "m-cold-elegance", "m-evening-trail"],
+      "conflictsWith": ["m-sport-fresh", "m-fruity-fresh", "m-sea-morning"]
+    },
+    {
+      "id": "m-hot-air",
+      "title": "Горячий воздух",
+      "hint": "Нагретый камень, сухие травы, пряности, светлые смолы",
+      "description": "Полдень на юге: раскалённый камень, сухая трава вдоль дороги, тень сосны, в которой пахнет смолой. Сухой и светлый, с пряной теплотой и травянистой горечью. Не пляжная свежесть, а скорее жар, который приятно чувствовать на коже.",
+      "profile": {
+        "aromatic": { "target": 3, "weight": 0.7 },
+        "spicy": { "target": 3, "weight": 0.6 },
+        "woody": { "target": 3, "weight": 0.6 },
+        "amber": { "target": 2, "weight": 0.5 },
+        "fresh": { "target": 2, "weight": 0.5 },
+        "mineral": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.4 },
+        "incense": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 3 } },
+      "tags": ["sunny", "warm", "nature", "confident"],
+      "seasons": ["summer", "spring"],
+      "occasions": ["daily", "vacation"],
+      "clarifyingQuestions": [
+        {
+          "id": "herbs-or-resin",
+          "text": "Больше трав или больше смол и тепла?",
+          "options": [
+            { "id": "herbs", "label": "Травы и воздух", "effect": { "aromatic": 1, "fresh": 1 } },
+            { "id": "resin", "label": "Смолы и тепло", "effect": { "amber": 1, "incense": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-sea-morning"],
+      "conflictsWith": ["m-cold-elegance"]
+    },
+    {
+      "id": "m-young-luxury",
+      "title": "Молодая роскошь",
+      "hint": "Сочная свежесть, мягкая сладость, дерево — без тяжёлой кожи и уда",
+      "description": "Новые кроссовки к дорогому пальто, ужин на крыше, музыка, которую ещё не знают все. Звучит заметно и современно: сочный фрукт или цитрус сверху, мягкая сладость и чистое дерево в базе. Без тяжёлой кожи, навязчивого уда и интонации «папиного» парфюма.",
+      "profile": {
+        "sweet": { "target": 3, "weight": 0.7 },
+        "fresh": { "target": 3, "weight": 0.6 },
+        "fruity": { "target": 2, "weight": 0.5 },
+        "woody": { "target": 3, "weight": 0.5 },
+        "musky": { "target": 2, "weight": 0.4 },
+        "spicy": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 4, "weight": 0.5 },
+        "sillage": { "target": 3, "weight": 0.5 }
+      },
+      "avoid": { "leather": { "max": 1 }, "oud": { "max": 0 }, "smoky": { "max": 1 }, "tobacco": { "max": 1 }, "animalic": { "max": 0 } },
+      "tags": ["youthful", "luxury", "confident", "bold", "urban"],
+      "seasons": ["spring", "summer", "autumn"],
+      "occasions": ["party", "date", "evening", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "opening",
+          "text": "Что должно звучать первым?",
+          "options": [
+            { "id": "fruit", "label": "Сочный фрукт", "effect": { "fruity": 1 } },
+            { "id": "citrus-spice", "label": "Цитрус и пряности", "effect": { "citrus": 1, "spicy": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-expensive-clean", "m-night-city", "m-evening-trail", "m-fruity-fresh"],
+      "conflictsWith": ["m-autumn-park", "m-fireplace", "m-skin-scent"]
+    },
+    {
+      "id": "m-fruity-fresh",
+      "title": "Фруктовая свежесть",
+      "hint": "Зелёное яблоко, груша или ананас, цитрус, лёгкий мускус",
+      "description": "Яблоко, разрезанное прямо на кухонном столе, брызги цитруса, открытое окно. Сочный и бодрый, с понятной фруктовой нотой и чистым мускусом, который не даёт ему превратиться в леденец. Лёгкий для жары и для настроения.",
+      "profile": {
+        "fruity": { "target": 4, "weight": 1.0 },
+        "fresh": { "target": 4, "weight": 0.8 },
+        "citrus": { "target": 3, "weight": 0.5 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "musky": { "target": 2, "weight": 0.3 },
+        "woody": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 3 } },
+      "tags": ["fresh", "energetic", "playful", "youthful", "light"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "vacation", "sport"],
+      "clarifyingQuestions": [
+        {
+          "id": "fruit-kind",
+          "text": "Какой фрукт ближе?",
+          "options": [
+            { "id": "apple", "label": "Яблоко и груша — свежо и зелено", "effect": { "green": 1 } },
+            { "id": "tropical", "label": "Ананас и тропики — сочно и сладко", "effect": { "sweet": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-young-luxury", "m-sport-fresh"],
+      "conflictsWith": ["m-night-city", "m-modern-minimal", "m-coffee-books", "m-autumn-park", "m-dark-suit", "m-fireplace"]
+    },
+    {
+      "id": "m-evening-trail",
+      "title": "Вечерний шлейф",
+      "hint": "Пряности, амбра, тёмная сладость, заметный шлейф",
+      "description": "Ты уже вышел из комнаты, а запах ещё остаётся — тёплый, пряный, чуть сладкий. Амбра, специи и тёмное дерево здесь рассчитаны на то, чтобы их заметили. Ему нужен вечер, свободное пространство и немного уверенности.",
+      "profile": {
+        "sillage": { "target": 5, "weight": 0.8 },
+        "intensity": { "target": 4, "weight": 0.7 },
+        "amber": { "target": 4, "weight": 0.7 },
+        "spicy": { "target": 3, "weight": 0.6 },
+        "sweet": { "target": 3, "weight": 0.6 },
+        "woody": { "target": 3, "weight": 0.5 },
+        "vanilla": { "target": 2, "weight": 0.3 },
+        "fresh": { "target": 1, "weight": 0.4 }
+      },
+      "avoid": {},
+      "tags": ["evening", "sensual", "bold", "confident", "deep"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["evening", "date", "party", "special"],
+      "clarifyingQuestions": [
+        {
+          "id": "loudness",
+          "text": "Насколько громко?",
+          "options": [
+            { "id": "noticeable", "label": "Заметно, но без перебора", "effect": { "sillage": -1 } },
+            { "id": "memorable", "label": "Так, чтобы запомнили", "effect": { "intensity": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-warm-vanilla", "m-bar-midnight", "m-dark-suit", "m-young-luxury"],
+      "conflictsWith": ["m-skin-scent", "m-clean-linen", "m-green-tea", "m-sport-fresh", "m-after-rain"]
+    },
+    {
+      "id": "m-cold-elegance",
+      "title": "Холодная элегантность",
+      "hint": "Ирис или лаванда, минеральная свежесть, бледное дерево",
+      "description": "Зимний свет за большим окном, серое пальто, металлическая оправа очков. Холодный, сухой и точный: лаванда или ирис, минеральная свежесть, бледное дерево. Он держит дистанцию, но не отталкивает — как человек с безупречными манерами.",
+      "profile": {
+        "fresh": { "target": 3, "weight": 0.7 },
+        "iris": { "target": 3, "weight": 0.6 },
+        "woody": { "target": 3, "weight": 0.6 },
+        "mineral": { "target": 3, "weight": 0.5 },
+        "lavender": { "target": 2, "weight": 0.4 },
+        "powdery": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 0, "weight": 0.7 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "vanilla": { "max": 1 } },
+      "tags": ["elegant", "restrained", "minimal", "urban", "calm"],
+      "seasons": ["winter", "autumn", "spring"],
+      "occasions": ["office", "special", "evening"],
+      "clarifyingQuestions": [
+        {
+          "id": "lavender-or-iris",
+          "text": "Лаванда или ирис?",
+          "options": [
+            { "id": "lavender", "label": "Лаванда — свежо и травянисто", "effect": { "lavender": 2, "iris": -1 } },
+            { "id": "iris", "label": "Ирис — прохладно и чуть пудрово", "effect": { "iris": 1, "powdery": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-expensive-clean", "m-night-city", "m-modern-minimal", "m-dark-suit"],
+      "conflictsWith": ["m-warm-vanilla", "m-bar-midnight", "m-hot-air"]
+    },
+    {
+      "id": "m-after-rain",
+      "title": "После дождя",
+      "hint": "Влажное дерево, зелень, прохладный воздух, ветивер",
+      "description": "Дождь закончился десять минут назад. Скамейки ещё тёмные от воды, листья блестят, и хочется дышать глубже. Мокрое дерево, зелень, прохлада — спокойно, без сладости и без попыток произвести впечатление.",
+      "profile": {
+        "fresh": { "target": 4, "weight": 0.9 },
+        "woody": { "target": 3, "weight": 0.7 },
+        "green": { "target": 3, "weight": 0.7 },
+        "earthy": { "target": 2, "weight": 0.5 },
+        "aquatic": { "target": 2, "weight": 0.4 },
+        "mineral": { "target": 2, "weight": 0.3 },
+        "sweet": { "target": 0, "weight": 0.7 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 } },
+      "tags": ["nature", "calm", "fresh", "light"],
+      "seasons": ["spring", "summer", "autumn"],
+      "occasions": ["daily", "office"],
+      "clarifyingQuestions": [
+        {
+          "id": "green-or-wood",
+          "text": "Больше зелени или мокрого дерева?",
+          "options": [
+            { "id": "green", "label": "Зелень и листья", "effect": { "green": 1 } },
+            { "id": "wood", "label": "Мокрое дерево и земля", "effect": { "woody": 1, "earthy": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-night-city", "m-sea-morning", "m-autumn-park", "m-green-tea"],
+      "conflictsWith": ["m-warm-vanilla", "m-bar-midnight", "m-evening-trail"]
+    },
+    {
+      "id": "m-clean-linen",
+      "title": "Чистое бельё",
+      "hint": "Свежевыстиранная ткань, белый мускус, альдегиды, немного лаванды",
+      "description": "Простыни, высохшие на ветру, хрустящий воротник, стопка полотенец в шкафу. Мускус и альдегиды дают ощущение чистой ткани, а лаванда или цитрус добавляют прохлады. Уютно и аккуратно, хотя тем, кто не любит мыльные ноты, стоит быть осторожнее.",
+      "profile": {
+        "musky": { "target": 4, "weight": 0.9 },
+        "fresh": { "target": 3, "weight": 0.7 },
+        "aldehydic": { "target": 3, "weight": 0.6 },
+        "soapy": { "target": 2, "weight": 0.4 },
+        "lavender": { "target": 1, "weight": 0.3 },
+        "powdery": { "target": 1, "weight": 0.3 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "intensity": { "target": 2, "weight": 0.4 },
+        "sillage": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 2 } },
+      "tags": ["clean", "comfort", "calm", "light", "morning"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["daily", "office", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "soap",
+          "text": "Мыльные ноты тебе нравятся?",
+          "options": [
+            { "id": "yes", "label": "Да, это и есть чистота", "effect": { "soapy": 1 } },
+            { "id": "no", "label": "Нет, лучше мягче", "effect": { "soapy": -2, "musky": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-expensive-clean", "m-skin-scent", "m-green-tea"],
+      "conflictsWith": ["m-bar-midnight", "m-evening-trail", "m-fireplace"]
+    },
+    {
+      "id": "m-green-tea",
+      "title": "Зелёный чай",
+      "hint": "Зелёный чай, цитрусовая цедра, травы",
+      "description": "Фарфоровая пиала, пар над чаем, на блюдце ломтик лимона. Прозрачный и тихий: чайный лист, цедра, травянистая горчинка, капля цветов где-то на заднем плане. Его носят для себя, чтобы день шёл ровнее.",
+      "profile": {
+        "tea": { "target": 4, "weight": 1.0 },
+        "fresh": { "target": 4, "weight": 0.8 },
+        "green": { "target": 3, "weight": 0.6 },
+        "citrus": { "target": 2, "weight": 0.4 },
+        "floral": { "target": 1, "weight": 0.3 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "intensity": { "target": 1, "weight": 0.5 },
+        "sillage": { "target": 1, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "smoky": { "max": 1 } },
+      "tags": ["calm", "fresh", "light", "minimal", "nature"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "office", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "tea-flowers",
+          "text": "Чай чистый или с цветами?",
+          "options": [
+            { "id": "pure", "label": "Чистый, травянистый", "effect": { "floral": -1, "green": 1 } },
+            { "id": "floral", "label": "С лёгкими цветами", "effect": { "floral": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-sea-morning", "m-autumn-park", "m-after-rain", "m-clean-linen", "m-skin-scent"],
+      "conflictsWith": ["m-warm-vanilla", "m-bar-midnight", "m-evening-trail", "m-fireplace"]
+    },
+    {
+      "id": "m-fireplace",
+      "title": "Тёплый камин",
+      "hint": "Дым, смолы, тёплое дерево, немного ванили",
+      "description": "Поленья трещат, по комнате идёт сухое тепло, на ладонях остаётся запах смолы и золы. Дымный и смолистый, с мягкой сладостью, которая не даёт ему стать резким. Хорош для холодных вечеров — и для тех, кто не боится заметных ароматов.",
+      "profile": {
+        "smoky": { "target": 4, "weight": 1.0 },
+        "woody": { "target": 4, "weight": 0.7 },
+        "amber": { "target": 3, "weight": 0.5 },
+        "incense": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 2, "weight": 0.4 },
+        "spicy": { "target": 2, "weight": 0.3 },
+        "vanilla": { "target": 1, "weight": 0.3 },
+        "fresh": { "target": 0, "weight": 0.5 },
+        "intensity": { "target": 4, "weight": 0.4 },
+        "sillage": { "target": 3, "weight": 0.3 }
+      },
+      "avoid": {},
+      "tags": ["warm", "cozy", "deep", "mysterious", "nostalgic"],
+      "seasons": ["winter", "autumn"],
+      "occasions": ["evening", "home", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "smoke-level",
+          "text": "Насколько дымно?",
+          "options": [
+            { "id": "light", "label": "Лёгкий дымок", "effect": { "smoky": -1, "sweet": 1 } },
+            { "id": "bonfire", "label": "Как у настоящего костра", "effect": { "smoky": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-warm-vanilla", "m-coffee-books", "m-autumn-park", "m-bar-midnight"],
+      "conflictsWith": ["m-expensive-clean", "m-sea-morning", "m-young-luxury", "m-fruity-fresh", "m-clean-linen", "m-green-tea", "m-sport-fresh"]
+    },
+    {
+      "id": "m-skin-scent",
+      "title": "Аромат близко к коже",
+      "hint": "Мягкий мускус, светлое дерево, тихий шлейф",
+      "description": "Его слышно, только когда наклоняешься ближе: тёплая кожа, чистый мускус, светлое дерево. Он не заполняет комнату и не спорит с окружающими. Для близких дистанций — и для тех, кто не любит, когда парфюм входит в помещение раньше хозяина.",
+      "profile": {
+        "musky": { "target": 4, "weight": 0.9 },
+        "sillage": { "target": 1, "weight": 0.9 },
+        "intensity": { "target": 1, "weight": 0.8 },
+        "woody": { "target": 2, "weight": 0.5 },
+        "fresh": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.4 },
+        "amber": { "target": 1, "weight": 0.2 }
+      },
+      "avoid": { "intensity": { "max": 3 }, "sillage": { "max": 2 } },
+      "tags": ["calm", "comfort", "restrained", "sensual", "minimal"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["daily", "office", "date", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "warm-or-cool",
+          "text": "Тепло или прохлада?",
+          "options": [
+            { "id": "warm", "label": "Тёплая кожа", "effect": { "amber": 1, "sweet": 1 } },
+            { "id": "cool", "label": "Прохладная чистота", "effect": { "fresh": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-expensive-clean", "m-modern-minimal", "m-clean-linen", "m-green-tea"],
+      "conflictsWith": ["m-bar-midnight", "m-young-luxury", "m-evening-trail"]
+    },
+    {
+      "id": "m-sport-fresh",
+      "title": "Спортивная свежесть",
+      "hint": "Цитрус, мята или морская нота, лёгкое дерево",
+      "description": "Холодная вода из бутылки, футболка после тренировки, ветер на велодорожке. Всё просто и бодро: цитрус, мята или морская нота, прохладные травы и немного дерева. На глубину он не претендует, зато легко уживается с жарой, движением и ранним подъёмом.",
+      "profile": {
+        "fresh": { "target": 5, "weight": 1.0 },
+        "citrus": { "target": 3, "weight": 0.6 },
+        "aquatic": { "target": 2, "weight": 0.4 },
+        "aromatic": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "woody": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.4 },
+        "sillage": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "smoky": { "max": 0 }, "leather": { "max": 0 } },
+      "tags": ["sporty", "energetic", "fresh", "light", "youthful"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["sport", "daily", "vacation"],
+      "clarifyingQuestions": [
+        {
+          "id": "sport-kind",
+          "text": "Что ближе?",
+          "options": [
+            { "id": "citrus-mint", "label": "Цитрус и мята", "effect": { "citrus": 1, "aromatic": 1 } },
+            { "id": "marine", "label": "Морская свежесть", "effect": { "aquatic": 2 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["m-sea-morning", "m-fruity-fresh"],
+      "conflictsWith": ["m-night-city", "m-warm-vanilla", "m-coffee-books", "m-autumn-park", "m-bar-midnight", "m-dark-suit", "m-evening-trail", "m-fireplace"]
+    }
+  ]
+}

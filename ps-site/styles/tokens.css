@@ -1,0 +1,138 @@
+/* Дизайн-токены PS: цвета, шрифты, отступы, скругления, тени, движение.
+   Тема задаётся атрибутом data-theme на <html>: neutral (до выбора пола), male, female.
+   Палитры мужской и женской темы — из ТЗ (раздел 5). Оттенки *-strong добавлены для контраста текста на кнопках (≥ 4.5:1). */
+
+/* Цвета темы объявлены как типизированные свойства — так браузер умеет плавно переходить
+   между мужской и женской темой (400–600 мс), а не переключать цвет мгновенно. */
+@property --c-bg { syntax: '<color>'; inherits: true; initial-value: #f6f4f1; }
+@property --c-surface { syntax: '<color>'; inherits: true; initial-value: #fffdfb; }
+@property --c-surface-2 { syntax: '<color>'; inherits: true; initial-value: #ece8e3; }
+@property --c-text { syntax: '<color>'; inherits: true; initial-value: #1f1d1c; }
+@property --c-text-muted { syntax: '<color>'; inherits: true; initial-value: #5f5a56; }
+@property --c-line { syntax: '<color>'; inherits: true; initial-value: #dcd6cf; }
+@property --c-accent { syntax: '<color>'; inherits: true; initial-value: #8c7f72; }
+@property --c-accent-strong { syntax: '<color>'; inherits: true; initial-value: #5c5248; }
+@property --c-deep { syntax: '<color>'; inherits: true; initial-value: #2b2724; }
+@property --art-line { syntax: '<color>'; inherits: true; initial-value: #8c7f72; }
+@property --art-line-soft { syntax: '<color>'; inherits: true; initial-value: #b9afa5; }
+@property --art-glow { syntax: '<color>'; inherits: true; initial-value: #ece8e3; }
+@property --art-glow-2 { syntax: '<color>'; inherits: true; initial-value: #f6f4f1; }
+
+:root {
+  /* Шрифты */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-text: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Типографическая шкала (мобильная → настольная) */
+  --fs-hero: clamp(2.6rem, 8.2vw, 5.6rem);
+  --fs-h1: clamp(2.1rem, 5.6vw, 3.6rem);
+  --fs-h2: clamp(1.6rem, 3.6vw, 2.4rem);
+  --fs-h3: clamp(1.25rem, 2.4vw, 1.6rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-caption: 0.75rem;
+  --lh-tight: 1.08;
+  --lh-text: 1.6;
+  --tracking-caps: 0.28em;
+
+  /* Отступы */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --space-9: 112px;
+  --gutter: 16px;
+  --content-max: 1120px;
+  --text-max: 34rem;
+
+  /* Движение (Design Direction 2.0): hover 150–220, небольшие 220–350, режимы 350–600, карточки 250–400 мс */
+  --dur-fast: 180ms;
+  --dur-base: 260ms;
+  --dur-slow: 350ms;
+  --dur-card: 320ms;
+  --dur-theme: 520ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 768px) {
+  :root { --gutter: 40px; }
+}
+
+/* Нейтральная тема — до выбора пола: тёплый светлый, без явного «мужского» или «женского» характера */
+:root,
+[data-theme='neutral'] {
+  --c-bg: #f6f4f1;
+  --c-surface: #fffdfb;
+  --c-surface-2: #ece8e3;
+  --c-text: #1f1d1c;
+  --c-text-muted: #5f5a56;
+  --c-line: #dcd6cf;
+  --c-accent: #8c7f72;
+  --c-accent-strong: #5c5248;
+  --c-on-accent: #ffffff;
+  --c-deep: #2b2724;
+  --c-focus: #2b2724;
+  --radius-card: 16px;
+  --radius-control: 999px;
+  --shadow-card: 0 1px 2px rgb(31 29 28 / 0.04), 0 8px 24px rgb(31 29 28 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(31 29 28 / 0.06), 0 16px 40px rgb(31 29 28 / 0.1);
+  --decor-a: rgb(140 127 114 / 0.14);
+  --decor-b: rgb(236 232 227 / 0.9);
+  --art-line: #8c7f72;
+  --art-line-soft: #b9afa5;
+  --art-glow: #ece8e3;
+  --art-glow-2: #f1e9e6;
+}
+
+/* Мужская тема: холодная архитектурная элегантность — стекло, камень, сдержанность */
+[data-theme='male'] {
+  --c-bg: #f3f5f7;
+  --c-surface: #ffffff;
+  --c-surface-2: #e7edf4;
+  --c-text: #172336;
+  --c-text-muted: #4a5a70;
+  --c-line: #d3dbe5;
+  --c-accent: #54769d;
+  --c-accent-strong: #243b58;
+  --c-on-accent: #ffffff;
+  --c-deep: #172336;
+  --c-focus: #243b58;
+  --radius-card: 12px;
+  --shadow-card: 0 1px 2px rgb(23 35 54 / 0.05), 0 8px 24px rgb(23 35 54 / 0.07);
+  --shadow-lift: 0 2px 4px rgb(23 35 54 / 0.07), 0 16px 40px rgb(23 35 54 / 0.12);
+  --decor-a: rgb(84 118 157 / 0.14);
+  --decor-b: rgb(231 237 244 / 0.95);
+  --art-line: #54769d;
+  --art-line-soft: #9db1c8;
+  --art-glow: #dfe7f1;
+  --art-glow-2: #eef2f7;
+}
+
+/* Женская тема: мягкость, свет, шёлк, фарфор — без «детского розового» */
+[data-theme='female'] {
+  --c-bg: #fbf7f5;
+  --c-surface: #fffdfc;
+  --c-surface-2: #eddde1;
+  --c-text: #493d44;
+  --c-text-muted: #6e5f67;
+  --c-line: #e6d9dd;
+  --c-accent: #a87f93;
+  --c-accent-strong: #7d566a;
+  --c-on-accent: #ffffff;
+  --c-deep: #3b3037;
+  --c-focus: #7d566a;
+  --radius-card: 20px;
+  --shadow-card: 0 1px 2px rgb(73 61 68 / 0.04), 0 10px 28px rgb(73 61 68 / 0.07);
+  --shadow-lift: 0 2px 4px rgb(73 61 68 / 0.06), 0 18px 44px rgb(73 61 68 / 0.11);
+  --decor-a: rgb(168 127 147 / 0.16);
+  --decor-b: rgb(235 230 240 / 0.95);
+  --art-line: #a87f93;
+  --art-line-soft: #d2b8c4;
+  --art-glow: #f1e2e6;
+  --art-glow-2: #ebe6f0;
+}

@@ -1,0 +1,658 @@
+{
+  "version": 1,
+  "gender": "female",
+  "note": "20 женских эмоциональных образов. Это описания желаемого запаха, а не конкретные парфюмы. profile: target — желаемое значение 0–5, weight — важность 0–1. avoid: max — верхняя граница, выше которой аромат хуже подходит образу. Эффекты уточняющих вопросов — сдвиг target.",
+  "moods": [
+    {
+      "id": "f-tender-luxury",
+      "title": "Нежная роскошь",
+      "hint": "Светлые цветы, чистый мускус, лёгкая свежесть",
+      "description": "Белоснежные простыни, мягкий свет из-за плотных штор, букет в номере, который поменяли утром. Светлые прозрачные цветы, чистый мускус, немного свежести — элегантно и очень тихо. Роскошь здесь не в громкости, а в ощущении, что о тебе позаботились.",
+      "profile": {
+        "musky": { "target": 3, "weight": 0.7 },
+        "floral": { "target": 3, "weight": 0.7 },
+        "fresh": { "target": 3, "weight": 0.6 },
+        "white-floral": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "powdery": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.5 },
+        "sillage": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "oud": { "max": 0 }, "smoky": { "max": 1 }, "leather": { "max": 1 } },
+      "tags": ["luxury", "clean", "tender", "elegant", "calm"],
+      "seasons": ["spring", "summer", "autumn"],
+      "occasions": ["daily", "office", "special"],
+      "clarifyingQuestions": [
+        {
+          "id": "flowers-or-fresh",
+          "text": "Больше цветов или больше свежести?",
+          "options": [
+            { "id": "flowers", "label": "Цветы", "effect": { "floral": 1, "white-floral": 1 } },
+            { "id": "fresh", "label": "Свежесть и чистота", "effect": { "fresh": 1, "musky": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-after-shower", "f-silk-cream", "f-white-shirt", "f-quiet-beauty", "f-floral-morning"],
+      "conflictsWith": ["f-dark-rose", "f-bold-femininity", "f-berry-dessert"]
+    },
+    {
+      "id": "f-floral-morning",
+      "title": "Цветочное утро",
+      "hint": "Свежие цветы, зелень, роса, цитрус",
+      "description": "Окно на кухне открыто, на подоконнике в банке стоят пионы, купленные вчера у метро. Зелёный, свежий и цветочный, с каплей цитруса, как будто лепестки ещё мокрые. Лёгкий для дня и понятный с первой секунды.",
+      "profile": {
+        "floral": { "target": 4, "weight": 0.9 },
+        "fresh": { "target": 4, "weight": 0.7 },
+        "green": { "target": 2, "weight": 0.5 },
+        "citrus": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 2, "weight": 0.4 },
+        "fruity": { "target": 1, "weight": 0.3 },
+        "powdery": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "powdery": { "max": 3 }, "smoky": { "max": 0 } },
+      "tags": ["morning", "fresh", "tender", "light", "romantic"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "office"],
+      "clarifyingQuestions": [
+        {
+          "id": "flower-kind",
+          "text": "Какие цветы ближе?",
+          "options": [
+            { "id": "peony", "label": "Пион и роза — нежно", "effect": { "rose": 1 } },
+            { "id": "lily", "label": "Ландыш и зелень — прохладно", "effect": { "green": 1, "fresh": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-garden-rain", "f-citrus-light", "f-tea-garden", "f-tender-luxury", "f-summer-vacation"],
+      "conflictsWith": ["f-dark-rose", "f-candle-evening", "f-cashmere-coat"]
+    },
+    {
+      "id": "f-silk-cream",
+      "title": "Шёлк и дорогой крем",
+      "hint": "Мягкая пудра, сливочный мускус, ирис, тёплая кожа",
+      "description": "Шёлковая блузка, крем, который втирают в ладони перед выходом, тёплое запястье. Мягкий и телесный: пудровый ирис, сливочный мускус, лёгкая сладость. Шлейф деликатный — его замечают те, кто рядом, а не все в лифте.",
+      "profile": {
+        "musky": { "target": 4, "weight": 0.8 },
+        "powdery": { "target": 3, "weight": 0.7 },
+        "creamy": { "target": 3, "weight": 0.7 },
+        "iris": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 1, "weight": 0.4 },
+        "intensity": { "target": 2, "weight": 0.5 },
+        "sillage": { "target": 2, "weight": 0.5 }
+      },
+      "avoid": { "sillage": { "max": 3 } },
+      "tags": ["tender", "comfort", "sensual", "elegant", "calm"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["daily", "office", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "powder-or-skin",
+          "text": "Больше пудры или больше тепла кожи?",
+          "options": [
+            { "id": "powder", "label": "Пудра и ирис", "effect": { "powdery": 1, "iris": 1 } },
+            { "id": "skin", "label": "Тёплая кожа", "effect": { "musky": 1, "amber": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-tender-luxury", "f-modern-powder", "f-quiet-beauty", "f-cashmere-coat", "f-sunwarmed-skin", "f-after-shower"],
+      "conflictsWith": ["f-citrus-light", "f-bold-femininity"]
+    },
+    {
+      "id": "f-white-shirt",
+      "title": "Белая рубашка",
+      "hint": "Хлопок, альдегиды, чистый мускус, светлое дерево",
+      "description": "Хрустящий хлопок, закатанные рукава, волосы собраны наспех — и всё равно безупречно. Чистый, немного прохладный, с ощущением выглаженной ткани: альдегиды, белый мускус, светлое дерево. Для женщины, которой не нужно украшательство, чтобы её замечали.",
+      "profile": {
+        "musky": { "target": 4, "weight": 0.8 },
+        "fresh": { "target": 3, "weight": 0.7 },
+        "aldehydic": { "target": 3, "weight": 0.6 },
+        "woody": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 1, "weight": 0.6 },
+        "floral": { "target": 1, "weight": 0.4 },
+        "powdery": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "gourmand": { "max": 1 } },
+      "tags": ["clean", "minimal", "confident", "restrained", "elegant"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["office", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "warm-or-cool",
+          "text": "Чуть теплее или совсем прохладно?",
+          "options": [
+            { "id": "warm", "label": "Чуть теплее, с деревом", "effect": { "woody": 1, "musky": 1 } },
+            { "id": "cool", "label": "Совсем прохладно", "effect": { "fresh": 1, "aldehydic": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-tender-luxury", "f-after-shower", "f-calm-confidence", "f-quiet-beauty"],
+      "conflictsWith": ["f-berry-dessert", "f-vanilla-tender", "f-candle-evening", "f-bold-femininity", "f-warm-memory"]
+    },
+    {
+      "id": "f-vanilla-tender",
+      "title": "Ванильная нежность",
+      "hint": "Ваниль, мягкая амбра, немного цветов",
+      "description": "Плед, кружка какао, книга, которую не хочется заканчивать. Ваниль мягкая и обволакивающая, с тёплой амброй и щепоткой цветов — они не дают ей превратиться в кондитерскую. Уютно, тепло и близко к коже.",
+      "profile": {
+        "vanilla": { "target": 4, "weight": 1.0 },
+        "sweet": { "target": 4, "weight": 0.8 },
+        "amber": { "target": 2, "weight": 0.5 },
+        "creamy": { "target": 2, "weight": 0.4 },
+        "musky": { "target": 2, "weight": 0.3 },
+        "floral": { "target": 1, "weight": 0.3 },
+        "fresh": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "gourmand": { "max": 3 } },
+      "tags": ["warm", "cozy", "tender", "comfort", "sensual"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["daily", "date", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "sweetness",
+          "text": "Насколько сладко?",
+          "options": [
+            { "id": "low", "label": "Едва заметно", "effect": { "sweet": -1 } },
+            { "id": "mid", "label": "Ощутимо, но не приторно", "effect": {} },
+            { "id": "high", "label": "Чем слаще, тем лучше", "effect": { "sweet": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-warm-memory", "f-cashmere-coat", "f-berry-dessert", "f-candle-evening"],
+      "conflictsWith": ["f-white-shirt", "f-citrus-light", "f-tea-garden", "f-garden-rain"]
+    },
+    {
+      "id": "f-after-shower",
+      "title": "После душа",
+      "hint": "Чистая кожа, мускус, мягкая свежесть, лёгкие цветы",
+      "description": "Пар на зеркале, мягкое полотенце, кожа ещё прохладная после воды. Чистота и тепло одновременно: мускус, немного цветов, свежесть без резкости. Важно, что это ощущение чистоты, а не запах геля для душа: он мягче и держится дольше.",
+      "profile": {
+        "musky": { "target": 4, "weight": 0.9 },
+        "fresh": { "target": 3, "weight": 0.7 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "soapy": { "target": 2, "weight": 0.4 },
+        "aldehydic": { "target": 1, "weight": 0.3 },
+        "powdery": { "target": 1, "weight": 0.3 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "intensity": { "target": 2, "weight": 0.5 },
+        "sillage": { "target": 1, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "oud": { "max": 0 } },
+      "tags": ["clean", "comfort", "calm", "light", "morning"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["daily", "office", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "soap",
+          "text": "Мыльные ноты тебе нравятся?",
+          "options": [
+            { "id": "yes", "label": "Да, это и есть чистота", "effect": { "soapy": 1 } },
+            { "id": "no", "label": "Нет, лучше мягче", "effect": { "soapy": -2, "musky": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-tender-luxury", "f-white-shirt", "f-quiet-beauty", "f-silk-cream", "f-tea-garden"],
+      "conflictsWith": ["f-dark-rose", "f-bold-femininity", "f-candle-evening", "f-berry-dessert"]
+    },
+    {
+      "id": "f-berry-dessert",
+      "title": "Ягодный десерт",
+      "hint": "Малина, смородина, сливки, немного ванили",
+      "description": "Тарталетка с малиной на блюдце, ложка взбитых сливок, ягоды, которые чуть кислят. Сладко и игриво: сочная ягодная нота на сливочно-ванильном фоне. Кислинка здесь важна — без неё было бы слишком сладко.",
+      "profile": {
+        "berry": { "target": 4, "weight": 1.0 },
+        "sweet": { "target": 4, "weight": 0.8 },
+        "fruity": { "target": 3, "weight": 0.6 },
+        "gourmand": { "target": 3, "weight": 0.6 },
+        "vanilla": { "target": 2, "weight": 0.4 },
+        "creamy": { "target": 2, "weight": 0.3 },
+        "fresh": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": {},
+      "tags": ["playful", "youthful", "romantic", "warm"],
+      "seasons": ["autumn", "winter", "spring"],
+      "occasions": ["date", "party", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "berry-or-cream",
+          "text": "Что должно быть на первом плане?",
+          "options": [
+            { "id": "berry", "label": "Ягоды с кислинкой", "effect": { "berry": 1, "fresh": 1 } },
+            { "id": "cream", "label": "Сливки и ваниль", "effect": { "creamy": 1, "vanilla": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-vanilla-tender", "f-bold-femininity"],
+      "conflictsWith": ["f-tender-luxury", "f-white-shirt", "f-after-shower", "f-tea-garden", "f-calm-confidence", "f-quiet-beauty", "f-garden-rain"]
+    },
+    {
+      "id": "f-candle-evening",
+      "title": "Вечер при свечах",
+      "hint": "Тёплые смолы, немного ладана, ваниль, тёмные цветы",
+      "description": "Свечи на столе, бокал красного вина, разговор, который затянулся за полночь. Тёплый и смолистый: амбра, немного ладана, ваниль, тёмные цветы на заднем плане. Чувственный, но не громкий — ему хватает пространства между двумя людьми.",
+      "profile": {
+        "amber": { "target": 4, "weight": 0.8 },
+        "vanilla": { "target": 3, "weight": 0.6 },
+        "sweet": { "target": 3, "weight": 0.5 },
+        "incense": { "target": 2, "weight": 0.5 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "spicy": { "target": 2, "weight": 0.4 },
+        "woody": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 0, "weight": 0.5 },
+        "intensity": { "target": 3, "weight": 0.5 },
+        "sillage": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "sillage": { "max": 4 } },
+      "tags": ["evening", "sensual", "warm", "romantic", "mysterious"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["date", "evening"],
+      "clarifyingQuestions": [
+        {
+          "id": "incense",
+          "text": "Ладан — интересно или лишнее?",
+          "options": [
+            { "id": "yes", "label": "Интересно", "effect": { "incense": 1 } },
+            { "id": "no", "label": "Лишнее", "effect": { "incense": -2, "vanilla": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-vanilla-tender", "f-dark-rose", "f-warm-memory", "f-bold-femininity"],
+      "conflictsWith": ["f-floral-morning", "f-white-shirt", "f-after-shower", "f-citrus-light", "f-summer-vacation", "f-garden-rain", "f-tea-garden", "f-quiet-beauty"]
+    },
+    {
+      "id": "f-garden-rain",
+      "title": "Сад после дождя",
+      "hint": "Мокрая зелень, лепестки, земля, прохлада",
+      "description": "Капли стекают с листьев сирени, дорожка пахнет мокрой землёй, а розы у забора раскрылись сильнее, чем утром. Зелёный, влажный, цветочный, с прохладой воздуха после грозы. Спокойный, живой и совсем не сладкий.",
+      "profile": {
+        "green": { "target": 4, "weight": 0.9 },
+        "floral": { "target": 3, "weight": 0.7 },
+        "fresh": { "target": 4, "weight": 0.7 },
+        "earthy": { "target": 2, "weight": 0.4 },
+        "aquatic": { "target": 1, "weight": 0.3 },
+        "sweet": { "target": 1, "weight": 0.6 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 } },
+      "tags": ["nature", "fresh", "calm", "light"],
+      "seasons": ["spring", "summer", "autumn"],
+      "occasions": ["daily", "office"],
+      "clarifyingQuestions": [
+        {
+          "id": "flowers-or-green",
+          "text": "Больше цветов или зелени?",
+          "options": [
+            { "id": "flowers", "label": "Цветы", "effect": { "floral": 1 } },
+            { "id": "green", "label": "Зелень и влажная земля", "effect": { "green": 1, "earthy": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-floral-morning", "f-tea-garden", "f-quiet-beauty"],
+      "conflictsWith": ["f-vanilla-tender", "f-berry-dessert", "f-candle-evening"]
+    },
+    {
+      "id": "f-summer-vacation",
+      "title": "Летний отпуск",
+      "hint": "Солнце, кокос, соль на коже, тропические цветы",
+      "description": "Лежак у воды, масло для загара, соль на плечах и цветок тиаре за ухом. Солнечный и расслабленный: кокос, белые тропические цветы, морская соль. Пахнет свободным временем, даже если до отпуска ещё полгода.",
+      "profile": {
+        "coconut": { "target": 3, "weight": 0.7 },
+        "white-floral": { "target": 3, "weight": 0.6 },
+        "salty": { "target": 2, "weight": 0.5 },
+        "floral": { "target": 3, "weight": 0.5 },
+        "sweet": { "target": 3, "weight": 0.5 },
+        "fresh": { "target": 3, "weight": 0.5 },
+        "aquatic": { "target": 2, "weight": 0.4 },
+        "creamy": { "target": 2, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "smoky": { "max": 0 }, "oud": { "max": 0 } },
+      "tags": ["sunny", "playful", "light", "warm"],
+      "seasons": ["summer"],
+      "occasions": ["vacation", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "coconut",
+          "text": "Кокос — да или нет?",
+          "options": [
+            { "id": "yes", "label": "Да", "effect": { "coconut": 1 } },
+            { "id": "no", "label": "Нет, лучше цитрус", "effect": { "coconut": -3, "citrus": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-citrus-light", "f-sunwarmed-skin", "f-floral-morning"],
+      "conflictsWith": ["f-candle-evening", "f-cashmere-coat", "f-dark-rose", "f-modern-powder", "f-calm-confidence"]
+    },
+    {
+      "id": "f-modern-powder",
+      "title": "Современная пудра",
+      "hint": "Ирис, лёгкая пудра, мускус — без старомодной косметички",
+      "description": "Новая помада в тяжёлом футляре, светлая пудреница, бархатные тени. Пудровость здесь современная: ирис, мускус, немного сладости и никакого запаха старой косметички. Мягко, гладко и очень ухоженно.",
+      "profile": {
+        "powdery": { "target": 4, "weight": 0.9 },
+        "iris": { "target": 3, "weight": 0.6 },
+        "musky": { "target": 3, "weight": 0.6 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 1, "weight": 0.3 },
+        "creamy": { "target": 1, "weight": 0.2 },
+        "intensity": { "target": 2, "weight": 0.4 }
+      },
+      "avoid": { "animalic": { "max": 0 }, "aldehydic": { "max": 3 } },
+      "tags": ["elegant", "tender", "comfort", "restrained"],
+      "seasons": ["spring", "autumn", "winter"],
+      "occasions": ["office", "daily", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "powder-kind",
+          "text": "Пудра сладкая или сухая?",
+          "options": [
+            { "id": "sweet", "label": "Сладкая, как помада", "effect": { "sweet": 1 } },
+            { "id": "dry", "label": "Сухая, как ирис", "effect": { "sweet": -1, "iris": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-silk-cream", "f-quiet-beauty", "f-calm-confidence", "f-cashmere-coat"],
+      "conflictsWith": ["f-summer-vacation", "f-citrus-light"]
+    },
+    {
+      "id": "f-tea-garden",
+      "title": "Чайный сад",
+      "hint": "Зелёный или белый чай, цитрус, лёгкие цветы",
+      "description": "Плантация на склоне, туман между рядами кустов, кто-то несёт корзину свежих листьев. Светлый и прозрачный: чай, лёгкие цветы, немного цитрусовой цедры. Он не отвлекает и не утомляет, его можно носить с утра до ночи.",
+      "profile": {
+        "tea": { "target": 4, "weight": 1.0 },
+        "fresh": { "target": 3, "weight": 0.7 },
+        "green": { "target": 2, "weight": 0.5 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "citrus": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "intensity": { "target": 1, "weight": 0.5 },
+        "sillage": { "target": 1, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 2 } },
+      "tags": ["calm", "fresh", "light", "minimal", "nature"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "office", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "tea-flowers",
+          "text": "Чай чистый или с цветами?",
+          "options": [
+            { "id": "pure", "label": "Чистый, травянистый", "effect": { "floral": -1, "green": 1 } },
+            { "id": "floral", "label": "С лёгкими цветами", "effect": { "floral": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-floral-morning", "f-garden-rain", "f-citrus-light", "f-after-shower", "f-quiet-beauty"],
+      "conflictsWith": ["f-vanilla-tender", "f-berry-dessert", "f-candle-evening", "f-bold-femininity", "f-dark-rose", "f-warm-memory"]
+    },
+    {
+      "id": "f-citrus-light",
+      "title": "Цитрусовый свет",
+      "hint": "Бергамот, мандарин, флёрдоранж, свежесть",
+      "description": "Утреннее солнце на кафельном полу, апельсины в сетке, сок на пальцах. Искрящийся: бергамот, мандарин, флёрдоранж, немного горчинки цедры. Поднимает настроение, хотя на коже обычно звучит недолго — честная плата за лёгкость.",
+      "profile": {
+        "citrus": { "target": 5, "weight": 1.0 },
+        "fresh": { "target": 4, "weight": 0.8 },
+        "floral": { "target": 1, "weight": 0.3 },
+        "green": { "target": 1, "weight": 0.3 },
+        "sweet": { "target": 1, "weight": 0.4 },
+        "musky": { "target": 1, "weight": 0.2 },
+        "intensity": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 2 }, "powdery": { "max": 2 } },
+      "tags": ["energetic", "fresh", "sunny", "light", "playful"],
+      "seasons": ["spring", "summer"],
+      "occasions": ["daily", "office", "vacation", "sport"],
+      "clarifyingQuestions": [
+        {
+          "id": "longevity",
+          "text": "Важна стойкость?",
+          "options": [
+            { "id": "yes", "label": "Да, пусть держится дольше", "effect": { "musky": 1, "woody": 1 } },
+            { "id": "no", "label": "Нет, пусть будет совсем лёгким", "effect": { "intensity": -1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-floral-morning", "f-summer-vacation", "f-tea-garden"],
+      "conflictsWith": ["f-silk-cream", "f-vanilla-tender", "f-candle-evening", "f-modern-powder", "f-cashmere-coat", "f-dark-rose", "f-warm-memory"]
+    },
+    {
+      "id": "f-dark-rose",
+      "title": "Тёмная роза",
+      "hint": "Глубокая роза, пачули или уд, пряности, без приторности",
+      "description": "Огни ночного города, тёмный бархат, бутон, который уже начал темнеть по краям. Роза здесь густая и винная, её поддерживают пачули, пряности или немного уда. Глубина вместо сладости, загадка вместо романтической открытки.",
+      "profile": {
+        "rose": { "target": 5, "weight": 1.0 },
+        "floral": { "target": 4, "weight": 0.6 },
+        "woody": { "target": 3, "weight": 0.5 },
+        "earthy": { "target": 2, "weight": 0.4 },
+        "spicy": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "oud": { "target": 1, "weight": 0.3 },
+        "fresh": { "target": 0, "weight": 0.4 },
+        "intensity": { "target": 4, "weight": 0.5 },
+        "sillage": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 3 }, "gourmand": { "max": 1 } },
+      "tags": ["mysterious", "deep", "evening", "bold", "sensual"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["evening", "date", "special"],
+      "clarifyingQuestions": [
+        {
+          "id": "rose-base",
+          "text": "Роза с удом или с пачули?",
+          "options": [
+            { "id": "oud", "label": "С удом — темнее и гуще", "effect": { "oud": 2 } },
+            { "id": "patchouli", "label": "С пачули — землисто и мягче", "effect": { "earthy": 1, "oud": -1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-candle-evening", "f-bold-femininity", "f-calm-confidence"],
+      "conflictsWith": ["f-tender-luxury", "f-floral-morning", "f-after-shower", "f-summer-vacation", "f-tea-garden", "f-citrus-light", "f-sunwarmed-skin", "f-quiet-beauty"]
+    },
+    {
+      "id": "f-calm-confidence",
+      "title": "Спокойная уверенность",
+      "hint": "Сухое дерево, сдержанные цветы, немного пряностей",
+      "description": "Каблуки по мрамору, твёрдое рукопожатие, телефон, который можно выключить, потому что всё уже решено. Собранный и сухой: дерево, сдержанные цветы, немного перца или кардамона. Не стремится быть милым и не стремится шокировать — просто уверен в себе.",
+      "profile": {
+        "woody": { "target": 3, "weight": 0.8 },
+        "floral": { "target": 2, "weight": 0.5 },
+        "spicy": { "target": 2, "weight": 0.5 },
+        "musky": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.6 },
+        "iris": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.4 },
+        "sillage": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "sweet": { "max": 3 }, "gourmand": { "max": 1 } },
+      "tags": ["confident", "elegant", "restrained", "urban", "minimal"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["office", "special", "daily"],
+      "clarifyingQuestions": [
+        {
+          "id": "wood-or-flowers",
+          "text": "Больше дерева или цветов?",
+          "options": [
+            { "id": "wood", "label": "Дерево", "effect": { "woody": 1 } },
+            { "id": "flowers", "label": "Цветы", "effect": { "floral": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-white-shirt", "f-modern-powder", "f-dark-rose", "f-cashmere-coat"],
+      "conflictsWith": ["f-berry-dessert", "f-summer-vacation"]
+    },
+    {
+      "id": "f-sunwarmed-skin",
+      "title": "Согретая солнцем кожа",
+      "hint": "Тёплая кожа, белые цветы, амбра, лёгкая соль",
+      "description": "Плечи после целого дня на солнце, тонкая цепочка, нагретая на шее, запах солнцезащитного крема. Тёплый и телесный: амбра, белые цветы, мускус, чуть-чуть соли. Чувственно, но очень естественно, как будто так пахнет сама кожа.",
+      "profile": {
+        "musky": { "target": 3, "weight": 0.7 },
+        "amber": { "target": 3, "weight": 0.6 },
+        "white-floral": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "salty": { "target": 2, "weight": 0.4 },
+        "creamy": { "target": 2, "weight": 0.4 },
+        "floral": { "target": 2, "weight": 0.4 },
+        "fresh": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 2, "weight": 0.4 },
+        "sillage": { "target": 2, "weight": 0.3 }
+      },
+      "avoid": { "smoky": { "max": 1 } },
+      "tags": ["sensual", "warm", "sunny", "comfort", "calm"],
+      "seasons": ["summer", "spring"],
+      "occasions": ["daily", "date", "vacation"],
+      "clarifyingQuestions": [
+        {
+          "id": "salt-or-flowers",
+          "text": "Соль и море или белые цветы?",
+          "options": [
+            { "id": "salt", "label": "Соль и море", "effect": { "salty": 1, "aquatic": 1 } },
+            { "id": "flowers", "label": "Белые цветы", "effect": { "white-floral": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-silk-cream", "f-summer-vacation", "f-quiet-beauty"],
+      "conflictsWith": ["f-dark-rose"]
+    },
+    {
+      "id": "f-cashmere-coat",
+      "title": "Кашемировое пальто",
+      "hint": "Мягкое дерево, мускус, немного ванили и пудры",
+      "description": "Ноябрьский ветер, мягкий воротник до подбородка, тепло шерсти, которое не хочется отпускать. Уютный и плотный: светлое дерево, кашемировый мускус, немного ванили и пудры. Согревает, но остаётся элегантным — без сладкой тяжести.",
+      "profile": {
+        "woody": { "target": 3, "weight": 0.7 },
+        "musky": { "target": 3, "weight": 0.7 },
+        "vanilla": { "target": 2, "weight": 0.5 },
+        "sweet": { "target": 2, "weight": 0.5 },
+        "powdery": { "target": 2, "weight": 0.4 },
+        "amber": { "target": 2, "weight": 0.4 },
+        "creamy": { "target": 2, "weight": 0.3 },
+        "fresh": { "target": 1, "weight": 0.3 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "sweet": { "max": 3 } },
+      "tags": ["cozy", "warm", "elegant", "comfort", "calm"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["daily", "office", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "vanilla",
+          "text": "Ваниль нужна?",
+          "options": [
+            { "id": "yes", "label": "Да, немного", "effect": { "vanilla": 1 } },
+            { "id": "no", "label": "Лучше без неё", "effect": { "vanilla": -2, "woody": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-silk-cream", "f-vanilla-tender", "f-modern-powder", "f-calm-confidence", "f-warm-memory"],
+      "conflictsWith": ["f-floral-morning", "f-summer-vacation", "f-citrus-light"]
+    },
+    {
+      "id": "f-quiet-beauty",
+      "title": "Тихая красота",
+      "hint": "Чистый мускус, тихий шлейф, естественность",
+      "description": "Без макияжа, с распущенными волосами, в льняном платье — и всё равно глаз не отвести. Почти прозрачный: чистый мускус, лёгкий цветок, ощущение ухоженной кожи. Он не объявляет о себе, но остаётся в памяти у тех, кто оказался совсем рядом.",
+      "profile": {
+        "musky": { "target": 5, "weight": 1.0 },
+        "sillage": { "target": 1, "weight": 0.8 },
+        "intensity": { "target": 1, "weight": 0.8 },
+        "fresh": { "target": 2, "weight": 0.4 },
+        "sweet": { "target": 1, "weight": 0.5 },
+        "floral": { "target": 1, "weight": 0.3 },
+        "powdery": { "target": 1, "weight": 0.3 }
+      },
+      "avoid": { "intensity": { "max": 3 }, "sillage": { "max": 2 } },
+      "tags": ["calm", "clean", "tender", "minimal", "restrained"],
+      "seasons": ["spring", "summer", "autumn", "winter"],
+      "occasions": ["daily", "office", "home"],
+      "clarifyingQuestions": [
+        {
+          "id": "loudness",
+          "text": "Совсем тихо или чуть заметнее?",
+          "options": [
+            { "id": "quiet", "label": "Совсем тихо", "effect": {} },
+            { "id": "more", "label": "Чуть заметнее", "effect": { "sillage": 1, "floral": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-tender-luxury", "f-silk-cream", "f-white-shirt", "f-after-shower", "f-garden-rain", "f-modern-powder", "f-tea-garden", "f-sunwarmed-skin"],
+      "conflictsWith": ["f-berry-dessert", "f-candle-evening", "f-bold-femininity", "f-dark-rose"]
+    },
+    {
+      "id": "f-bold-femininity",
+      "title": "Дерзкая женственность",
+      "hint": "Яркие цветы или фрукты, ваниль, пачули, заметный шлейф",
+      "description": "Красное платье, тонкий каблук, громкий смех, который слышно из соседнего зала. Заметный и сочный: насыщенные цветы или фрукты, пачули, ваниль, хорошая стойкость. Его носят не ради того, чтобы понравиться, а чтобы запомниться.",
+      "profile": {
+        "intensity": { "target": 4, "weight": 0.8 },
+        "sillage": { "target": 4, "weight": 0.7 },
+        "floral": { "target": 3, "weight": 0.5 },
+        "sweet": { "target": 3, "weight": 0.5 },
+        "fruity": { "target": 2, "weight": 0.4 },
+        "earthy": { "target": 2, "weight": 0.4 },
+        "vanilla": { "target": 2, "weight": 0.4 },
+        "amber": { "target": 2, "weight": 0.3 },
+        "fresh": { "target": 1, "weight": 0.4 }
+      },
+      "avoid": {},
+      "tags": ["bold", "sensual", "confident", "evening", "playful"],
+      "seasons": ["autumn", "winter", "spring"],
+      "occasions": ["party", "evening", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "flowers-or-fruit",
+          "text": "Цветы или фрукты?",
+          "options": [
+            { "id": "flowers", "label": "Цветы", "effect": { "floral": 1 } },
+            { "id": "fruit", "label": "Фрукты", "effect": { "fruity": 1, "sweet": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-berry-dessert", "f-candle-evening", "f-dark-rose"],
+      "conflictsWith": ["f-tender-luxury", "f-silk-cream", "f-white-shirt", "f-after-shower", "f-tea-garden", "f-quiet-beauty"]
+    },
+    {
+      "id": "f-warm-memory",
+      "title": "Тёплое воспоминание",
+      "hint": "Мёд, тёплые специи, ваниль, мягкие цветы",
+      "description": "Кухня в выходной: пирог в духовке, мёд в банке, солнце на старой скатерти. Тёплый и немного ностальгический — мёд, корица или гвоздика, ваниль, мягкие цветы. Он не про детство буквально, а про чувство, что тебя ждут.",
+      "profile": {
+        "honey": { "target": 3, "weight": 0.7 },
+        "spicy": { "target": 3, "weight": 0.6 },
+        "vanilla": { "target": 3, "weight": 0.6 },
+        "sweet": { "target": 3, "weight": 0.6 },
+        "amber": { "target": 2, "weight": 0.4 },
+        "floral": { "target": 2, "weight": 0.3 },
+        "woody": { "target": 1, "weight": 0.3 },
+        "fresh": { "target": 0, "weight": 0.4 },
+        "intensity": { "target": 3, "weight": 0.4 }
+      },
+      "avoid": { "animalic": { "max": 1 } },
+      "tags": ["nostalgic", "warm", "cozy", "comfort", "tender"],
+      "seasons": ["autumn", "winter"],
+      "occasions": ["daily", "home", "date"],
+      "clarifyingQuestions": [
+        {
+          "id": "honey",
+          "text": "Мёд — да или нет?",
+          "options": [
+            { "id": "yes", "label": "Да", "effect": { "honey": 1 } },
+            { "id": "no", "label": "Нет, лучше ваниль", "effect": { "honey": -3, "vanilla": 1 } }
+          ]
+        }
+      ],
+      "compatibleWith": ["f-vanilla-tender", "f-candle-evening", "f-cashmere-coat"],
+      "conflictsWith": ["f-white-shirt", "f-tea-garden", "f-citrus-light"]
+    }
+  ]
+}

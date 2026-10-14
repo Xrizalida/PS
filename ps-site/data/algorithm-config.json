@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "note": "Веса и правила алгоритма подбора. Меняются здесь, а не в коде. Описание простыми словами — docs/ALGORITHM.md. Числа стартовые и будут подстраиваться по проверочным запросам (этап 4).",
+
+  "eligibleStatuses": ["verified", "partial"],
+  "eligibleListStatuses": ["main"],
+
+  "segmentOrder": ["budget", "mid", "premium"],
+  "cheaperSegmentScore": 0.85,
+
+  "moodPriorityWeights": [1.0, 0.7, 0.5, 0.3],
+  "maxMaybeMoods": 2,
+  "adjustmentNewDimWeight": 0.5,
+
+  "weights": {
+    "character": 0.6,
+    "moodFit": 0.15,
+    "season": 0.08,
+    "occasion": 0.07,
+    "budget": 0.05,
+    "liked": 0.05,
+    "wearability": 0.08,
+    "originality": 0.08
+  },
+
+  "avoidPenaltyPerPoint": 0.05,
+  "softStopPenalty": 0.08,
+  "possibleStopPenalty": 0.04,
+  "dislikedSimilarityPenalty": 0.15,
+  "hardStopIncludesPossible": true,
+
+  "stopFactorRules": {
+    "heavy-leather": [{ "dim": "leather", "min": 3 }],
+    "oud": [{ "dim": "oud", "min": 2 }],
+    "tobacco": [{ "dim": "tobacco", "min": 2 }],
+    "rose": [{ "dim": "rose", "min": 3 }],
+    "powdery": [{ "dim": "powdery", "min": 3 }],
+    "cloying-sweet": [{ "dim": "sweet", "min": 5 }],
+    "gourmand": [{ "dim": "gourmand", "min": 3 }],
+    "smoky": [{ "dim": "smoky", "min": 3 }],
+    "incense": [{ "dim": "incense", "min": 3 }],
+    "animalic": [{ "dim": "animalic", "min": 2 }],
+    "loud": [{ "dim": "intensity", "min": 4 }, { "dim": "sillage", "min": 4 }],
+    "soapy": [{ "dim": "soapy", "min": 3 }],
+    "boozy": [{ "dim": "boozy", "min": 3 }],
+    "white-floral": [{ "dim": "white-floral", "min": 3 }],
+    "citrus-heavy": [{ "dim": "citrus", "min": 4 }],
+    "marine": [{ "dim": "aquatic", "min": 3 }]
+  },
+
+  "minResultScore": 0.62,
+
+  "matchLabels": [
+    { "min": 0.82, "label": "Очень близко к запросу" },
+    { "min": 0.7, "label": "Хорошее совпадение" },
+    { "min": 0, "label": "Интересный эксперимент" }
+  ],
+
+  "tiers": {
+    "edt": { "results": 3, "maxPerBrand": 1, "maxPerLine": 1 },
+    "edp": { "results": 7, "maxPerBrand": 2, "maxPerLine": 1 },
+    "parfum": { "results": 15, "maxPerBrand": 3, "maxPerLine": 2 }
+  },
+
+  "diversity": { "lambda": 0.75 },
+
+  "discovery": {
+    "minScore": 0.6,
+    "minRelativeToTop": 0.88,
+    "minOriginality": 4,
+    "rankWeights": { "score": 0.5, "originality": 0.25, "novelty": 0.25 },
+    "byExperiment": {
+      "low": { "enabled": false },
+      "high": { "minScore": 0.58, "minRelativeToTop": 0.8 }
+    }
+  },
+
+  "tuning": [
+    { "id": "fresher", "label": "Хочу свежее", "adjustments": { "fresh": 1 } },
+    { "id": "less-sweet", "label": "Менее сладко", "adjustments": { "sweet": -1 } },
+    { "id": "more-wood", "label": "Больше древесности", "adjustments": { "woody": 1 } },
+    { "id": "less-sillage", "label": "Меньше шлейфа", "adjustments": { "sillage": -1, "intensity": -1 } },
+    { "id": "evening", "label": "Более вечерний", "adjustments": { "intensity": 1, "amber": 1 }, "occasions": ["evening"] },
+    { "id": "versatile", "label": "Более универсальный", "preferWearable": true },
+    { "id": "no-leather", "label": "Без тяжёлой кожи", "hardStops": ["heavy-leather"] },
+    { "id": "unusual", "label": "Больше необычных вариантов", "preferOriginal": true, "experiment": "high" }
+  ],
+
+  "coverage": {
+    "strongScore": 0.78,
+    "acceptableScore": 0.72,
+    "minCandidatesPerSegment": 3
+  }
+}
