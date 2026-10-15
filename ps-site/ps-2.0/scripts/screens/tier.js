@@ -5,7 +5,8 @@ import { TIERS, FREE_NOTE } from '../core/format.js';
 import { questionsForTier } from '../core/request.js';
 
 export function render(ctx) {
-  const cur = ctx.state.tier;
+  // Отмечаем уровень, только если человек уже отвечал на анкету; по умолчанию ничего не выбрано.
+  const cur = Object.keys(ctx.state.quiz.answers).length ? ctx.state.tier : null;
   const cards = TIERS.map((t) => {
     const q = questionsForTier(ctx.questions, t.id).length;
     const n = ctx.config.tiers[t.id].results;

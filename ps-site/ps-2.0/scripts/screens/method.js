@@ -1,6 +1,7 @@
 // Способ подбора: «По ощущениям» или «По анкете». Две большие карточки — фирменный элемент PS.
 
 import { icons, esc } from '../core/dom.js';
+import { slot } from '../ui/slot.js';
 
 // Примеры для выбора языка — прямо из словаря нот, чтобы разница была понятна сразу.
 function langExamples(ctx, lang) {
@@ -16,8 +17,12 @@ function langExamples(ctx, lang) {
 
 const LEAD = 'Оба пути приводят к короткому списку с объяснением. Можно вернуться и попробовать другой.';
 
+const photo = (m, tone) => slot({ tone, motif: 'circle', src: m?.src, srcset: m?.srcset, alt: m?.alt, focus: m?.focus, sizes: '(min-width: 720px) 50vw, 50vw', priority: true });
+
 export function render(ctx) {
   const { method, gender } = ctx.state;
+  const media = ctx.display.media.method ?? {};
+  const tone = gender === 'female' ? 'powder' : 'steel';
   return `
   <section class="screen">
     <div class="wrap">
@@ -29,7 +34,7 @@ export function render(ctx) {
       </div>
       <div class="bigcards">
         <button type="button" class="bigcard" data-method="moods" aria-pressed="${method === 'moods'}">
-          <span class="slot slot--circle" data-tone="${gender === 'female' ? 'powder' : 'steel'}" aria-hidden="true"></span>
+          ${photo(media.moods, tone)}
           <span class="bigcard__veil"></span>
           <span class="bigcard__num">01</span>
           <span class="bigcard__arrow">${icons.arrow}</span>
@@ -38,7 +43,7 @@ export function render(ctx) {
           <span class="bigcard__meta">около минуты</span>
         </button>
         <button type="button" class="bigcard" data-method="quiz" aria-pressed="${method === 'quiz'}">
-          <span class="schema schema--quiz" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          ${photo(media.quiz, tone)}
           <span class="bigcard__veil"></span>
           <span class="bigcard__num">02</span>
           <span class="bigcard__arrow">${icons.arrow}</span>

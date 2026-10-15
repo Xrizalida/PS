@@ -10,6 +10,11 @@ const SCENES = [
   { eyebrow: 'Как работает PS', title: 'Мы начинаем с ощущения.', lead: 'Выбери образы, ответь на несколько простых вопросов или изучи галерею — и получи понятные описания, а не список нот.' },
 ];
 
+// Фото галереи — фоном широкой карточки; без фото остаются «полки» из линий.
+const galleryPhoto = (g) => (g?.src
+  ? slot({ tone: 'cocoa', motif: 'frame', src: g.src, srcset: g.srcset, alt: g.alt, focus: g.focus, sizes: '(min-width: 720px) 100vw, 100vw', cls: 'slot--gallery' })
+  : '<span class="schema schema--shelf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>');
+
 export function render(ctx) {
   const media = ctx.display.media;
   const g = ctx.state.gender;
@@ -64,7 +69,7 @@ export function render(ctx) {
         ${genderCard('male', 1, 'Мужское', 'Дерево, кожа, прохлада, вечерний город')}
         ${genderCard('female', 2, 'Женское', 'Ткани, тёплый свет, цветы, пудра')}
         <button type="button" class="bigcard bigcard--wide bigcard--gallery" data-act="gallery">
-          <span class="schema schema--shelf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          ${galleryPhoto(media.gallery)}
           <span class="bigcard__veil"></span>
           <span class="bigcard__num">03 · без подбора</span>
           <span class="bigcard__arrow">${icons.arrow}</span>

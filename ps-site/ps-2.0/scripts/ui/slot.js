@@ -22,7 +22,18 @@ export function slot({ tone = 'graphite', motif = 'frame', src = null, srcset = 
 }
 
 // Фото проявляется плавно после загрузки; если файл не открылся — убираем его, остаётся заглушка.
+// Уже загруженное фото (из кэша) показывается сразу, без повторного проявления — карточки не мигают.
 export function watchSlotImages(doc = document) {
+  const instant = (img) => {
+    if (img.complete && img.naturalWidth) img.classList.add('is-loaded', 'no-fade');
+  };
+  new MutationObserver((list) => {
+    for (const rec of list) for (const n of rec.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if (n.classList?.contains('slot__img')) instant(n);
+      n.querySelectorAll?.('.slot__img').forEach(instant);
+    }
+  }).observe(doc.body, { childList: true, subtree: true });
   doc.addEventListener('load', (e) => {
     if (e.target.classList?.contains('slot__img')) e.target.classList.add('is-loaded');
   }, true);
@@ -46,4 +57,11 @@ export function preloadImages(moods) {
       im.src = src;
     }
   }
+}
+
+// Тихая предзагрузка конкретных файлов (например, фото каталога, пока человек на предыдущем экране).
+export function prefetch(urls) {
+  const run = () => urls.filter((u) => SAFE_SRC.test(u)).forEach((u) => { const im = new Image(); im.decoding = 'async'; im.src = u; });
+  if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 1500 });
+  else setTimeout(run, 400);
 }

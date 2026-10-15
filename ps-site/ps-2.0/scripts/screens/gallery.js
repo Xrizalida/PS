@@ -7,11 +7,14 @@ import {
   defaultFilters, filterGallery, activeCount, searchIndex, eligiblePerfumes,
 } from '../core/gallery.js';
 import { perfumeCard, perfumeRow, handleAct } from '../ui/perfume.js';
+import { slot } from '../ui/slot.js';
 
 const label = (o, lang) => (lang === 'expert' && o.expert) || o.plain;
 const narrow = () => window.matchMedia('(max-width: 719px)').matches;
 
-export function render() {
+export function render(ctx) {
+  const g = ctx.display.media.gallery;
+  const banner = g?.src ? `<div class="gbanner">${slot({ tone: 'cocoa', motif: 'frame', src: g.src, srcset: g.srcset, alt: g.alt, focus: g.focus, sizes: '(min-width: 1180px) 1180px, 100vw', priority: true })}</div>` : '';
   return `
   <section class="screen gallery">
     <div class="wrap">
@@ -21,6 +24,7 @@ export function render() {
         <h1 class="display h2">Галерея ароматов</h1>
         <p class="lead">Найди то, что подходит именно тебе. Поиск, фильтры и подробные описания — без анкеты.</p>
       </div>
+      ${banner}
       <div class="search gsearch">
         <input type="search" data-slot="q" placeholder="Бренд или название" aria-label="Поиск по бренду, названию и линейке" autocomplete="off" enterkeyhint="search">
       </div>

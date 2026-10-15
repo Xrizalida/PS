@@ -71,17 +71,23 @@ export function mount(root, ctx) {
   };
 
   // ---------- Каталог ----------
-  const cell = (m, i) => {
-    const st = Sel.statusOf(sel(), m.id);
-    const pos = sel().liked.indexOf(m.id);
+  const MARK = { maybe: '◇', rejected: '×' };
+  const stateOf = (id) => {
+    const st = Sel.statusOf(sel(), id);
+    const pos = sel().liked.indexOf(id);
     const stText = { liked: `выбран, приоритет ${pos + 1}`, maybe: 'возможно', rejected: 'не моё', none: 'не выбран' }[st];
+    return { st, pos, stText, mark: pos >= 0 ? String(pos + 1) : MARK[st] ?? '' };
+  };
+  // Первые карточки видны сразу — их фото грузим без очереди, остальные по мере прокрутки.
+  const cell = (m, i) => {
+    const { st, pos, stText, mark } = stateOf(m.id);
     return `
     <div class="mcard is-${st}" data-cell="${m.id}">
       <button type="button" class="mcard__btn" data-act="toggle" data-id="${m.id}" role="checkbox" aria-checked="${st === 'liked'}" aria-label="${esc(m.title)}: ${esc(cardOf(m, lang))}. ${stText}">
-        ${moodSlot(m)}
+        ${moodSlot(m, { priority: i < 4 })}
         <span class="mcard__veil"></span>
         <span class="mcard__body"><span class="mcard__title">${esc(m.title)}</span><span class="mcard__hint">${esc(cardOf(m, lang))}</span></span>
-        <span class="mcard__check" aria-hidden="true">${pos >= 0 ? pos + 1 : ''}</span>
+        <span class="mcard__check" aria-hidden="true">${mark}</span>
       </button>
       <button type="button" class="mcard__info" data-act="info" data-id="${m.id}" aria-label="Подробнее: ${esc(m.title)}"><span>i</span></button>
     </div>`;
@@ -89,16 +95,20 @@ export function mount(root, ctx) {
   const renderCatalog = () => {
     const group = ctx.store.get().moodGroup;
     const list = moods.filter((m) => group === 'all' || m.group === group);
-    viewSlot.innerHTML = `<div class="mgrid">${list.map((m) => cell(m, ids.indexOf(m.id))).join('')}</div>`;
+    viewSlot.innerHTML = `<div class="mgrid">${list.map((m, i) => cell(m, i)).join('')}</div>`;
   };
-  // Номера приоритета меняются у всех выбранных, поэтому обновляем все карточки, а не одну.
-  const refreshCatalog = (focusId) => {
+  // Номера приоритета меняются у всех выбранных. Обновляем только отметки и подписи —
+  // фото не пересоздаются, поэтому карточки не мигают и не меняют тон при выборе.
+  const refreshCatalog = () => {
     viewSlot.querySelectorAll('[data-cell]').forEach((el) => {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = cell(byId.get(el.dataset.cell), 0);
-      el.replaceWith(tmp.firstElementChild);
+      const m = byId.get(el.dataset.cell);
+      const { st, stText, mark } = stateOf(m.id);
+      el.className = `mcard is-${st}`;
+      const btn = el.querySelector('.mcard__btn');
+      btn.setAttribute('aria-checked', String(st === 'liked'));
+      btn.setAttribute('aria-label', `${m.title}: ${cardOf(m, lang)}. ${stText}`);
+      el.querySelector('.mcard__check').textContent = mark;
     });
-    if (focusId) viewSlot.querySelector(`[data-cell="${focusId}"] .mcard__btn`)?.focus({ preventScroll: true });
   };
 
   // ---------- По одной ----------
@@ -244,6 +254,8 @@ export function mount(root, ctx) {
     });
   }
 
+  // Без пересоздания фото: в каталоге меняются только отметки, в колоде — текущая карточка.
+  const refreshView = () => ((ctx.store.get().moodView ?? 'catalog') === 'swipe' ? renderSwipe() : refreshCatalog());
   const renderView = () => {
     const view = ctx.store.get().moodView ?? 'catalog';
     filterSlot.hidden = view === 'swipe';
@@ -269,7 +281,7 @@ export function mount(root, ctx) {
         setSel(r.sel);
         if (r.overflow) toast('Основных образов уже три — этот отмечен как «возможно»');
         closeSheet();
-        renderView();
+        refreshView();
       }),
     });
   };
@@ -297,7 +309,7 @@ export function mount(root, ctx) {
     if (act === 'info') openInfo(byId.get(id));
     if (act === 'unlike') {
       setSel(Sel.reset(sel(), id));
-      renderView();
+      refreshView();
     }
     if (act === 'swipe') {
       const card = viewSlot.querySelector('.deck__card[data-depth="0"]');
