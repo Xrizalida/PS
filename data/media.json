@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "note": "Фото вступления и выбора пола. src = null — показывается тёмная заглушка. Пути — относительно папки ps-2.0. Список и размеры — IMAGE_MANIFEST.md.",
+  "intro": [
+    { "id": "scene-1", "tone": "graphite", "motif": "arch", "src": null, "srcWide": null, "alt": "" },
+    { "id": "scene-2", "tone": "cocoa", "motif": "verticals", "src": null, "srcWide": null, "alt": "" },
+    { "id": "scene-3", "tone": "steel", "motif": "horizon", "src": null, "srcWide": null, "alt": "" }
+  ],
+  "gender": {
+    "male": { "tone": "steel", "motif": "verticals", "src": null, "alt": "" },
+    "female": { "tone": "powder", "motif": "arch", "src": null, "alt": "" }
+  }
+}
