@@ -1,0 +1,122 @@
+{
+  "version": 2,
+  "note": "Анкета PS 2.0: Eau de Toilette — 3 вопроса, Eau de Parfum — 6, Le Parfum — 9. Бюджет и «что не нравится» спрашиваются на экране «Последний штрих» для обоих способов подбора. label — простые слова; expert — подпись в режиме «Нотами» (если нет — показывается label); female — вариант подписи для женского режима. Эффекты ответов (effect) — в том же формате, что и в версии 1: dims, seasons, occasions, moods, experiment. Режим «Просто / Нотами» меняет только подписи, не эффекты.",
+  "questions": [
+    {
+      "id": "occasion",
+      "tiers": ["edt", "edp", "parfum"],
+      "type": "single",
+      "title": "Куда чаще будешь его носить?",
+      "options": [
+        { "id": "daily", "label": "Каждый день", "effect": { "occasions": ["daily"] } },
+        { "id": "office", "label": "На работу и встречи", "effect": { "occasions": ["office"] } },
+        { "id": "evening", "label": "Вечер и свидания", "effect": { "occasions": ["evening", "date"] } },
+        { "id": "special", "label": "Особый случай", "effect": { "occasions": ["special", "party"] } },
+        { "id": "vacation", "label": "В отпуск", "effect": { "occasions": ["vacation"] } }
+      ]
+    },
+    {
+      "id": "feel",
+      "tiers": ["edt", "edp", "parfum"],
+      "type": "single",
+      "title": "Каким хочешь ощущаться?",
+      "titleFemale": "Какой хочешь ощущаться?",
+      "options": [
+        { "id": "fresh", "label": "Свежим и лёгким", "female": "Свежей и лёгкой", "effect": { "dims": { "fresh": { "target": 5, "weight": 0.9 }, "sweet": { "target": 1, "weight": 0.5 } } } },
+        { "id": "warm", "label": "Тёплым и уютным", "female": "Тёплой и уютной", "effect": { "dims": { "fresh": { "target": 1, "weight": 0.6 } }, "moods": { "male": ["m-warm-vanilla"], "female": ["f-cashmere-coat"] } } },
+        { "id": "mysterious", "label": "Загадочным", "female": "Загадочной", "effect": { "moods": { "male": ["m-night-city"], "female": ["f-candle-evening"] } } },
+        { "id": "clean", "label": "Чистым и аккуратным", "female": "Нежной и чистой", "effect": { "moods": { "male": ["m-expensive-clean"], "female": ["f-white-shirt"] } } },
+        { "id": "bold", "label": "Уверенным и заметным", "female": "Яркой и заметной", "effect": { "dims": { "intensity": { "target": 4, "weight": 0.6 } }, "moods": { "male": ["m-dark-suit"], "female": ["f-bold-femininity"] } } }
+      ]
+    },
+    {
+      "id": "sweetness",
+      "tiers": ["edt", "edp", "parfum"],
+      "type": "single",
+      "title": "Насколько сладким он может быть?",
+      "options": [
+        { "id": "dry", "label": "Совсем не сладко", "expert": "Сухо, без сладости", "effect": { "dims": { "sweet": { "target": 0, "weight": 1 } } } },
+        { "id": "soft", "label": "Чуть-чуть, для тепла", "expert": "Лёгкая сладость в базе", "effect": { "dims": { "sweet": { "target": 2, "weight": 0.9 } } } },
+        { "id": "sweet", "label": "Заметно, как десерт", "expert": "Гурманская сладость", "effect": { "dims": { "sweet": { "target": 4, "weight": 0.9 } } } }
+      ]
+    },
+    {
+      "id": "season",
+      "tiers": ["edp", "parfum"],
+      "type": "single",
+      "title": "Когда в основном будешь носить?",
+      "options": [
+        { "id": "warm", "label": "Когда тепло", "expert": "Весна и лето", "effect": { "seasons": ["spring", "summer"] } },
+        { "id": "cold", "label": "Когда холодно", "expert": "Осень и зима", "effect": { "seasons": ["autumn", "winter"] } },
+        { "id": "all", "label": "Круглый год", "effect": {} }
+      ]
+    },
+    {
+      "id": "projection",
+      "tiers": ["edp", "parfum"],
+      "type": "single",
+      "title": "Насколько заметным он должен быть?",
+      "options": [
+        { "id": "close", "label": "Только для себя", "expert": "Близко к коже, тихий шлейф", "effect": { "dims": { "intensity": { "target": 1, "weight": 0.9 }, "sillage": { "target": 1, "weight": 0.9 } } } },
+        { "id": "medium", "label": "Чтобы чувствовали рядом", "expert": "Умеренный шлейф", "effect": { "dims": { "intensity": { "target": 3, "weight": 0.6 }, "sillage": { "target": 2, "weight": 0.6 } } } },
+        { "id": "trail", "label": "Чтобы запомнили", "expert": "Заметный шлейф и высокая стойкость", "effect": { "dims": { "intensity": { "target": 4, "weight": 0.8 }, "sillage": { "target": 4, "weight": 0.8 } } } }
+      ]
+    },
+    {
+      "id": "character",
+      "tiers": ["edp", "parfum"],
+      "type": "multi",
+      "max": 2,
+      "title": "Что тебе ближе?",
+      "hint": "Можно выбрать два варианта.",
+      "options": [
+        { "id": "wood", "label": "Лес и дерево", "expert": "Древесные: кедр, ветивер, сандал", "effect": { "dims": { "woody": { "target": 4, "weight": 0.8 } } } },
+        { "id": "flowers", "label": "Букет цветов", "expert": "Цветочные: роза, жасмин, ирис", "effect": { "dims": { "floral": { "target": 4, "weight": 0.8 } } } },
+        { "id": "citrus-green", "label": "Цитрус и зелень", "expert": "Цитрусовые и зелёные: бергамот, нероли, листья", "effect": { "dims": { "citrus": { "target": 3, "weight": 0.6 }, "green": { "target": 3, "weight": 0.5 }, "fresh": { "target": 4, "weight": 0.5 } } } },
+        { "id": "spice-resin", "label": "Пряности и тепло", "expert": "Пряно-амбровые: кардамон, корица, смолы", "effect": { "dims": { "spicy": { "target": 3, "weight": 0.7 }, "amber": { "target": 3, "weight": 0.6 } } } },
+        { "id": "musk", "label": "Чистота, свежее бельё", "expert": "Мускусные и альдегидные", "effect": { "dims": { "musky": { "target": 4, "weight": 0.8 } } } },
+        { "id": "fruit", "label": "Фрукты и ягоды", "expert": "Фруктовые: груша, смородина, малина", "effect": { "dims": { "fruity": { "target": 3, "weight": 0.7 } } } }
+      ]
+    },
+    {
+      "id": "life-scent",
+      "tiers": ["parfum"],
+      "type": "multi",
+      "max": 2,
+      "title": "Какой запах из жизни тебе нравится?",
+      "hint": "До двух вариантов.",
+      "options": [
+        { "id": "linen", "label": "Свежее бельё", "expert": "Альдегиды и белый мускус", "effect": { "dims": { "musky": { "target": 4, "weight": 0.6 }, "aldehydic": { "target": 3, "weight": 0.5 } } } },
+        { "id": "coffee", "label": "Кофе и выпечка", "expert": "Кофе, тонка, пралине", "effect": { "dims": { "coffee": { "target": 4, "weight": 0.6 }, "gourmand": { "target": 3, "weight": 0.5 } } } },
+        { "id": "forest", "label": "Лес после дождя", "expert": "Ветивер, хвоя, дубовый мох", "effect": { "dims": { "green": { "target": 3, "weight": 0.5 }, "earthy": { "target": 3, "weight": 0.5 }, "woody": { "target": 3, "weight": 0.4 } } } },
+        { "id": "leather", "label": "Кожаный салон", "expert": "Кожаные аккорды, замша", "effect": { "dims": { "leather": { "target": 3, "weight": 0.6 } } } },
+        { "id": "books", "label": "Старые книги и дерево", "expert": "Сухие древесные, ирис, ваниль", "effect": { "dims": { "woody": { "target": 3, "weight": 0.5 }, "iris": { "target": 2, "weight": 0.4 }, "vanilla": { "target": 2, "weight": 0.3 } } } },
+        { "id": "sea", "label": "Море и соль", "expert": "Морские и солёные ноты", "effect": { "dims": { "aquatic": { "target": 3, "weight": 0.5 }, "salty": { "target": 2, "weight": 0.4 } } } },
+        { "id": "garden", "label": "Цветущий сад", "expert": "Цветы и зелень", "effect": { "dims": { "floral": { "target": 4, "weight": 0.6 }, "green": { "target": 2, "weight": 0.4 } } } },
+        { "id": "tea", "label": "Чай", "expert": "Чайные ноты: зелёный, чёрный, улун", "effect": { "dims": { "tea": { "target": 4, "weight": 0.6 } } } },
+        { "id": "smoke", "label": "Дым и костёр", "expert": "Дымные: ладан, берёза, гваяк", "effect": { "dims": { "smoky": { "target": 3, "weight": 0.6 }, "incense": { "target": 2, "weight": 0.4 } } } },
+        { "id": "vanilla", "label": "Ваниль и мёд", "expert": "Ваниль, бензоин, мёд", "effect": { "dims": { "vanilla": { "target": 4, "weight": 0.6 }, "honey": { "target": 2, "weight": 0.3 } } } }
+      ]
+    },
+    {
+      "id": "liked",
+      "tiers": ["parfum"],
+      "type": "perfumes",
+      "max": 3,
+      "title": "Есть аромат, который тебе нравится?",
+      "hint": "Найди по названию — подберём похожие по характеру. Если нет — просто пропусти.",
+      "effect": { "role": "liked" }
+    },
+    {
+      "id": "experiment",
+      "tiers": ["parfum"],
+      "type": "single",
+      "title": "Безопасно или с сюрпризом?",
+      "options": [
+        { "id": "low", "label": "Проверенная классика", "effect": { "experiment": "low" } },
+        { "id": "mid", "label": "Немного необычного", "effect": { "experiment": "mid" } },
+        { "id": "high", "label": "Удиви меня", "effect": { "experiment": "high" } }
+      ]
+    }
+  ]
+}
