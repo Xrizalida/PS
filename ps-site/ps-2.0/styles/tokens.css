@@ -1,15 +1,23 @@
-/* PS 2.0 — токены. Общая тёмная основа; мужской и женский режимы отличаются только акцентами.
-   Акцентные цвета зарегистрированы через @property, поэтому смена режима плавно перетекает. */
+/* PS 2.0 — токены. Общая тёмная основа PS; мужской и женский режимы различаются фоном, поверхностями,
+   текстом, акцентами и подсветкой. Цвета зарегистрированы через @property, поэтому смена режима
+   плавно перетекает (~520 мс). Линии и рамки вычисляются из цвета текста и тоже меняются вместе с режимом. */
 
+@property --bg { syntax: '<color>'; inherits: true; initial-value: #0c0b0b; }
+@property --bg-raise { syntax: '<color>'; inherits: true; initial-value: #131211; }
+@property --surface { syntax: '<color>'; inherits: true; initial-value: #171514; }
+@property --surface-2 { syntax: '<color>'; inherits: true; initial-value: #1e1b19; }
+@property --text { syntax: '<color>'; inherits: true; initial-value: #ece5da; }
+@property --text-2 { syntax: '<color>'; inherits: true; initial-value: #bdb5aa; }
+@property --muted { syntax: '<color>'; inherits: true; initial-value: #918a80; }
 @property --accent { syntax: '<color>'; inherits: true; initial-value: #8c9ba6; }
 @property --accent-2 { syntax: '<color>'; inherits: true; initial-value: #a2968a; }
 @property --glow { syntax: '<color>'; inherits: true; initial-value: rgba(140, 155, 166, 0.14); }
-@property --bg { syntax: '<color>'; inherits: true; initial-value: #0c0b0b; }
 
 :root {
   color-scheme: dark;
 
-  /* Основа */
+  /* Нейтральная основа — до выбора режима (вступление общее для обоих) */
+  --bg: #0c0b0b;
   --bg-raise: #131211;
   --surface: #171514;
   --surface-2: #1e1b19;
@@ -17,11 +25,16 @@
   --text: #ece5da;
   --text-2: #bdb5aa;
   --muted: #918a80;
-  --faint: #5f5953;
-  --line: rgba(236, 229, 218, 0.1);
-  --line-2: rgba(236, 229, 218, 0.18);
-  --line-3: rgba(236, 229, 218, 0.34);
-  --veil: rgba(12, 11, 10, 0.72);
+  --accent: #8c9ba6;
+  --accent-2: #a2968a;
+  --glow: rgba(140, 155, 166, 0.14);
+  --on-primary: #12100e;
+
+  --faint: color-mix(in srgb, var(--text) 35%, var(--bg));
+  --line: color-mix(in srgb, var(--text) 10%, transparent);
+  --line-2: color-mix(in srgb, var(--text) 18%, transparent);
+  --line-3: color-mix(in srgb, var(--text) 34%, transparent);
+  --veil: color-mix(in srgb, var(--bg) 72%, transparent);
 
   /* Палитра бренда */
   --blue: #8796a3;
@@ -47,32 +60,43 @@
   --t-fast: 180ms;
   --t: 320ms;
   --t-theme: 520ms;
-
-  --accent: #8c9ba6;
-  --accent-2: #a2968a;
-  --glow: rgba(140, 155, 166, 0.14);
-  --bg: #0c0b0b;
 }
 
+/* Мужское: глубокий графит, холодный почти чёрный, стальной синий; тёмное дерево — во втором акценте. */
 html[data-theme='male'] {
-  --accent: #93a6b6;
-  --accent-2: #7a5a47;
-  --glow: rgba(110, 138, 160, 0.17);
-  --bg: #0b0c0d;
+  --bg: #0b1017;
+  --bg-raise: #0f1620;
+  --surface: #151e29;
+  --surface-2: #1c2734;
+  --text: #e8edf3;
+  --text-2: #b4c0cc;
+  --muted: #8593a1;
+  --accent: #93a9bd;
+  --accent-2: #7a5c48;
+  --glow: rgba(120, 150, 180, 0.2);
+  --on-primary: #0b1017;
 }
 
+/* Женское: тёмный сливовый, тёплый шоколадный, приглушённая пудра, шампань. */
 html[data-theme='female'] {
-  --accent: #d6b8ac;
-  --accent-2: #8a5e4b;
-  --glow: rgba(205, 168, 150, 0.14);
-  --bg: #0d0b0a;
+  --bg: #181014;
+  --bg-raise: #1e141a;
+  --surface: #271a21;
+  --surface-2: #31222a;
+  --text: #f3e5e6;
+  --text-2: #d0bcbf;
+  --muted: #a48f94;
+  --accent: #d4a8ba;
+  --accent-2: #cdb38e;
+  --glow: rgba(212, 168, 186, 0.17);
+  --on-primary: #1a1015;
 }
 
 @media (min-width: 720px) {
   :root { --gutter: 28px; --hdr: 64px; }
 }
 
-/* Тона заглушек: тёмные, приглушённые; у каждого образа свой. */
+/* Тона заглушек: тёмные, приглушённые; у каждого образа свой. Нижний тон смешивается с фоном режима. */
 [data-tone='graphite'] { --t1: #2b2d32; --t2: #111214; }
 [data-tone='steel'] { --t1: #28333d; --t2: #0f1317; }
 [data-tone='cream'] { --t1: #39342d; --t2: #13110f; }

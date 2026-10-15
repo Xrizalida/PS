@@ -29,26 +29,30 @@
           <span class="logo__cap">Parfum Selection</span>
         </a>
         <div class="hdr__right">
-          <div class="seg hdr__desk" role="group" aria-label="Язык описаний" data-hdr-lang>
-            <button type="button" class="seg__btn" data-lang="plain">Просто</button>
-            <button type="button" class="seg__btn" data-lang="expert">Нотами</button>
-          </div>
           <div class="hdr__desk" data-hdr-gender hidden>
             <div class="seg" role="group" aria-label="Режим">
               <button type="button" class="seg__btn" data-gender="male">Мужское</button>
               <button type="button" class="seg__btn" data-gender="female">Женское</button>
             </div>
           </div>
+          <button type="button" class="icon-btn" data-open="gallery" aria-label="Галерея ароматов">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.2"/></svg>
+          </button>
           <button type="button" class="icon-btn" data-open="saved" aria-label="Сохранённое">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
             <span class="badge" data-saved-count hidden>0</span>
           </button>
-          <button type="button" class="icon-btn hdr__mob" data-open="settings" aria-label="Настройки">
+          <button type="button" class="icon-btn" data-open="settings" aria-label="Настройки: язык описаний и режим">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
           </button>
         </div>
       </div>
     </header>
+    <!-- Боковой декор широких экранов: только фон, не перехватывает нажатия (вступление, выбор пути, способ). -->
+    <div class="decor" aria-hidden="true">
+      <div class="decor__side decor__side--left" data-decor="left"></div>
+      <div class="decor__side decor__side--right" data-decor="right"></div>
+    </div>
     <main id="app" class="app" tabindex="-1">
       <div class="wrap screen"><p class="muted">Загружаем PS…</p></div>
     </main>

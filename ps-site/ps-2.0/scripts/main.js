@@ -16,9 +16,11 @@ import * as tier from './screens/tier.js';
 import * as quiz from './screens/quiz.js';
 import * as finish from './screens/finish.js';
 import * as results from './screens/results.js';
+import * as gallery from './screens/gallery.js';
+import { watchSlotImages } from './ui/slot.js';
 
-const SCREENS = { '': intro, method, feel, moods, tier, quiz, finish, results };
-const NEEDS_CATALOG = ['quiz', 'finish', 'results'];
+const SCREENS = { '': intro, method, feel, moods, tier, quiz, finish, results, gallery };
+const NEEDS_CATALOG = ['quiz', 'finish', 'results', 'gallery'];
 
 const load = async (path) => {
   const res = await fetch(new URL(path, document.baseURI), { cache: 'no-cache' });
@@ -29,6 +31,7 @@ const load = async (path) => {
 // Куда можно попасть: без пола — только вступление, без способа — выбор способа и т. д.
 function guard(route, s, questions) {
   if (!(route in SCREENS)) return '';
+  if (route === 'gallery') return route; // галерея — самостоятельный путь, пол и анкета не нужны
   if (route !== '' && !s.gender) return '';
   if (['feel', 'moods', 'tier', 'quiz', 'finish', 'results'].includes(route) && !s.method) return 'method';
   if (['feel', 'moods'].includes(route) && s.method !== 'moods') return 'tier';
@@ -42,11 +45,12 @@ async function boot() {
   const [moodsMale, moodsFemale, dimensions, config, texts] = await Promise.all(
     ['moods-male', 'moods-female', 'dimensions', 'algorithm-config', 'texts'].map((n) => load(`../data/${n}.json`)),
   );
-  const [moodsDisplay, perfumesDisplay, questionsJson, glossaryJson, media] = await Promise.all(
-    ['moods-display', 'perfumes-display', 'questions', 'notes-glossary', 'media'].map((n) => load(`data/${n}.json`)),
+  const [moodsDisplay, perfumesDisplay, questionsJson, glossaryJson, media, galleryCfg, popularity] = await Promise.all(
+    ['moods-display', 'perfumes-display', 'questions', 'notes-glossary', 'media', 'gallery', 'popularity'].map((n) => load(`data/${n}.json`)),
   );
   const questions = questionsJson.questions;
-  const display = { moods: moodsDisplay, perfumes: perfumesDisplay.perfumes, media };
+  const display = { moods: moodsDisplay, perfumes: perfumesDisplay.perfumes, media, gallery: galleryCfg, popularity };
+  watchSlotImages();
   const glossary = createGlossary(glossaryJson);
   const store = createStore();
 
@@ -66,7 +70,7 @@ async function boot() {
   const moodsFor = (gender) => {
     moodsCache[gender] ??= (gender === 'female' ? moodsFemale : moodsMale).moods.map((m) => {
       const d = displayById.get(m.id) ?? {};
-      return { ...m, ...d, title: m.title, hint: d.hint ?? m.hint, hintExpert: m.hint };
+      return { ...m, ...d, title: m.title };
     });
     return moodsCache[gender];
   };
@@ -74,18 +78,27 @@ async function boot() {
   // ---------- Тема и шапка ----------
   const html = document.documentElement;
   const hdrGender = document.querySelector('[data-hdr-gender]');
-  const hdrLang = document.querySelector('[data-hdr-lang]');
   const savedBadge = document.querySelector('[data-saved-count]');
   const syncChrome = (s) => {
     html.dataset.theme = s.gender ?? 'neutral';
     hdrGender.hidden = !s.gender;
     hdrGender.querySelectorAll('[data-gender]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.gender === s.gender)));
-    hdrLang.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === s.lang)));
     savedBadge.hidden = s.saved.length === 0;
     savedBadge.textContent = String(s.saved.length);
   };
   syncChrome(store.get());
   store.subscribe(syncChrome);
+
+  // Боковой декор: пока фото нет — тональные слои; фото подключается из media.json без правки кода.
+  for (const side of ['left', 'right']) {
+    const d = media.decor?.[side];
+    const el = document.querySelector(`[data-decor="${side}"]`);
+    if (el && d?.src && /^images\/decor\/[a-z0-9-]+\.(webp|avif|jpe?g|png)$/.test(d.src)) {
+      el.innerHTML = `<img src="${d.src}" alt="" loading="lazy" decoding="async">`;
+      el.classList.add('has-img');
+    }
+  }
+  const DECOR_ROUTES = { '': null, method: 0.85 }; // во вступлении видимость задаёт прокрутка
 
   let current = null;
   let cleanup = () => {};
@@ -117,8 +130,8 @@ async function boot() {
         <div class="head"><p class="eyebrow">Настройки</p><h2 class="display h3">Как показывать подбор</h2></div>
         <div class="settings__item"><p class="eyebrow">Язык описаний</p>
           <div class="seg seg--full" role="group" aria-label="Язык описаний">
-            <button type="button" class="seg__btn" data-set-lang="plain" aria-pressed="${s.lang === 'plain'}">Объясняй просто</button>
-            <button type="button" class="seg__btn" data-set-lang="expert" aria-pressed="${s.lang === 'expert'}">Я разбираюсь в нотах</button>
+            <button type="button" class="seg__btn" data-set-lang="plain" aria-pressed="${s.lang === 'plain'}">Без терминов</button>
+            <button type="button" class="seg__btn" data-set-lang="expert" aria-pressed="${s.lang === 'expert'}">На языке нот</button>
           </div>
           <p class="small muted">Меняет только язык описаний. Подборка от этого не меняется.</p></div>
         ${s.gender ? `<div class="settings__item"><p class="eyebrow">Режим</p>
@@ -149,6 +162,7 @@ async function boot() {
     if (el.dataset.gender) return setGender(el.dataset.gender);
     if (el.dataset.lang) return setLang(el.dataset.lang);
     if (el.dataset.open === 'settings') return openSettings();
+    if (el.dataset.open === 'gallery') return nav('gallery');
     if (el.dataset.open === 'saved') {
       await ensureData();
       return openSaved({ ...ctxBase });
@@ -180,14 +194,17 @@ async function boot() {
     const prev = current;
     current = route;
     html.dataset.route = route || 'intro';
+    html.dataset.decor = route in DECOR_ROUTES ? 'on' : 'off';
+    html.style.setProperty('--decor-o', String(DECOR_ROUTES[route] ?? 0));
 
     const swap = () => {
       const y = window.scrollY;
       cleanup();
       app.innerHTML = screen.render(ctx);
-      cleanup = screen.mount(app, ctx) ?? (() => {});
+      // Прокрутка — до подключения экрана: экран может сам прокрутить страницу (например, колода «по одной»).
       if (keepScroll) window.scrollTo(0, y);
       else if (!opts.focus) window.scrollTo(0, 0);
+      cleanup = screen.mount(app, ctx) ?? (() => {});
       const h1 = app.querySelector('h1');
       if (prev !== null && h1 && route !== '' && !keepScroll) {
         h1.setAttribute('tabindex', '-1');

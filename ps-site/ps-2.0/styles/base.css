@@ -6,7 +6,9 @@
 html {
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
-  transition: --accent var(--t-theme) var(--ease), --accent-2 var(--t-theme) var(--ease), --glow var(--t-theme) var(--ease), --bg var(--t-theme) var(--ease);
+  transition-property: --bg, --bg-raise, --surface, --surface-2, --text, --text-2, --muted, --accent, --accent-2, --glow;
+  transition-duration: var(--t-theme);
+  transition-timing-function: var(--ease);
 }
 
 body {
@@ -60,14 +62,14 @@ a { color: inherit; }
 .hdr {
   position: fixed; inset: 0 0 auto 0; z-index: 40;
   height: var(--hdr);
-  background: rgba(12, 11, 11, 0.82);
+  background: rgba(12, 12, 14, 0.84);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 82%, transparent), color-mix(in srgb, var(--bg) 55%, transparent));
   backdrop-filter: blur(14px) saturate(120%);
   -webkit-backdrop-filter: blur(14px) saturate(120%);
   border-bottom: 1px solid var(--line);
 }
 .hdr__inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.logo { display: inline-flex; align-items: baseline; gap: 10px; text-decoration: none; }
+.logo { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; }
 .logo__mark { font: 600 26px/1 var(--font-display); letter-spacing: 0.02em; }
 .logo__cap { font: 500 10px/1 var(--font-ui); letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
 .hdr__right { display: flex; align-items: center; gap: 8px; }
@@ -109,8 +111,8 @@ a { color: inherit; }
 }
 .btn:active { transform: scale(0.98); }
 .btn[disabled] { opacity: 0.38; pointer-events: none; }
-.btn--primary { background: var(--text); color: #12100e; }
-.btn--primary:hover { background: #fff8ee; }
+.btn--primary { background: var(--text); color: var(--on-primary); }
+.btn--primary:hover { background: color-mix(in srgb, var(--text) 82%, #fff); }
 .btn--ghost { border: 1px solid var(--line-2); color: var(--text); }
 .btn--ghost:hover { border-color: var(--line-3); }
 .btn--sm { min-height: 40px; padding: 0 16px; font-size: 14px; }
@@ -155,7 +157,7 @@ a { color: inherit; }
   transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
 }
 .chip:hover { border-color: var(--line-3); color: var(--text); }
-.chip[aria-pressed='true'] { background: var(--text); border-color: var(--text); color: #12100e; }
+.chip[aria-pressed='true'] { background: var(--text); border-color: var(--text); color: var(--on-primary); }
 .chip--static { cursor: default; }
 .chip--static:hover { border-color: var(--line-2); color: var(--text-2); }
 .chip__x { opacity: 0.6; font-size: 16px; line-height: 1; }
@@ -168,10 +170,12 @@ a { color: inherit; }
   border-color: rgba(236, 229, 218, 0.14); /* цвет линий-мотивов (рамки у самой заглушки нет) */
   background:
     radial-gradient(80% 60% at 85% 105%, var(--glow), transparent 70%),
-    radial-gradient(120% 95% at 28% 12%, var(--t1, #2b2d32), var(--t2, #111214) 72%);
+    radial-gradient(120% 95% at 28% 12%, var(--t1, #2b2d32), color-mix(in srgb, var(--t2, #111214) 65%, var(--bg)) 72%);
   isolation: isolate;
 }
-.slot > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.slot__img { opacity: 0; transition: opacity 420ms var(--ease); }
+.slot__img.is-loaded { opacity: 1; }
 .slot.has-img::before, .slot.has-img::after { display: none; }
 .slot::before, .slot::after { content: ''; position: absolute; pointer-events: none; border-color: rgba(236, 229, 218, 0.13); }
 .slot--arch::before { left: 24%; right: 24%; top: 20%; bottom: -1px; border: 1px solid; border-bottom: 0; border-radius: 999px 999px 0 0; border-color: inherit; }

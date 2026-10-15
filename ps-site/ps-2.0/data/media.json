@@ -6,8 +6,13 @@
     { "id": "scene-2", "tone": "cocoa", "motif": "verticals", "src": null, "srcWide": null, "alt": "" },
     { "id": "scene-3", "tone": "steel", "motif": "horizon", "src": null, "srcWide": null, "alt": "" }
   ],
+  "decor": {
+    "note": "Боковой декор для широких экранов (вступление, выбор пути, способ). src = null — временный тональный слой; фото владелец пришлёт отдельно.",
+    "left": { "src": null, "alt": "" },
+    "right": { "src": null, "alt": "" }
+  },
   "gender": {
-    "male": { "tone": "steel", "motif": "verticals", "src": null, "alt": "" },
-    "female": { "tone": "powder", "motif": "arch", "src": null, "alt": "" }
+    "male": { "tone": "steel", "motif": "verticals", "src": "images/gender/male-1086.webp", "srcset": "images/gender/male-540.webp 540w, images/gender/male-1086.webp 1086w", "alt": "Кожаное кресло, тёмное дерево и вечерний свет", "focus": "50% 45%" },
+    "female": { "tone": "powder", "motif": "arch", "src": "images/gender/female-1086.webp", "srcset": "images/gender/female-540.webp 540w, images/gender/female-1086.webp 1086w", "alt": "Вязаный свитер, кожаная сумка и мягкий свет", "focus": "50% 40%" }
   }
 }
