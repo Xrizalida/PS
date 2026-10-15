@@ -16,12 +16,26 @@ export const SEGMENTS = {
   mid: { label: 'Средний', range: 'обычно 5 000–15 000 ₽' },
   premium: { label: 'Премиальный', range: 'обычно от 15 000 ₽' },
 };
-export const PRICE_NOTE = 'Ориентир по сегменту. Реальные цены ещё не подтверждены — уточняй в магазине.';
+export const PRICE_NOTE = 'Точная цена уточняется: реальные цены и наличие ещё не подтверждены, сегменты предварительные.';
 
 export const segmentLine = (p) => {
   const s = SEGMENTS[p.segment];
-  return s ? `${s.label} · ${s.range}` : 'Уточнить цену в магазине';
+  return s ? `Ценовой сегмент: ${s.label.toLowerCase()} (${s.range}). Точная цена уточняется.` : 'Уточнить цену в магазине';
 };
+
+export const segmentShort = (p) => {
+  const s = SEGMENTS[p.segment];
+  return s ? `Сегмент: ${s.label.toLowerCase()} · ${s.range.replace('обычно ', '')}` : 'Цена уточняется';
+};
+
+// Заметность словами (режим «Просто») — по шкалам интенсивности и шлейфа каталога.
+export function presenceWords(p) {
+  const i = p.scales.intensity;
+  const s = p.scales.sillage;
+  const power = i <= 2 ? 'Мягкий, негромкий' : i === 3 ? 'Средней насыщенности' : 'Насыщенный, громкий';
+  const trail = s <= 2 ? 'держится близко к коже' : s === 3 ? 'чувствуется на расстоянии вытянутой руки' : 'оставляет заметный шлейф';
+  return `${power}, ${trail}.`;
+}
 
 export const BUDGETS = [
   { id: 'budget', label: 'До 5 000 ₽' },

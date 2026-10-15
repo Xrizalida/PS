@@ -1,6 +1,18 @@
 // Способ подбора: «По ощущениям» или «По анкете». Две большие карточки — фирменный элемент PS.
 
-import { icons } from '../core/dom.js';
+import { icons, esc } from '../core/dom.js';
+
+// Примеры для выбора языка — прямо из словаря нот, чтобы разница была понятна сразу.
+function langExamples(ctx, lang) {
+  return ['ладан', 'ирис'].map((note) => {
+    const e = ctx.glossary.lookup(note);
+    if (!e) return '';
+    const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+    // «Нотами»: термин из словаря уже начинается с названия («ладан (олибанум): …») — не повторяем его.
+    const [term, ...rest] = lang === 'expert' && e.expert.includes(':') ? e.expert.split(':') : [note, lang === 'expert' ? e.expert : e.plain];
+    return `<b>${esc(cap(term.trim()))}</b> — ${esc(rest.join(':').trim())}`;
+  }).filter(Boolean).join('<br>');
+}
 
 const LEAD = 'Оба пути приводят к короткому списку с объяснением. Можно вернуться и попробовать другой.';
 
@@ -35,14 +47,27 @@ export function render(ctx) {
           <span class="bigcard__meta">3, 6 или 9 вопросов</span>
         </button>
       </div>
+
+      <section class="langpick" aria-labelledby="langpick-title">
+        <h2 class="display h3" id="langpick-title">Как тебе удобнее читать об ароматах?</h2>
+        <p class="muted small">Выбери комфортный язык описаний. Это меняет объяснения, но не влияет на подбор.</p>
+        <div class="langpick__opts" role="group" aria-label="Язык описаний">
+          ${[['plain', 'Без терминов'], ['expert', 'На языке нот']].map(([id, title]) => `<button type="button" class="langopt" data-lang="${id}" aria-pressed="${ctx.state.lang === id}">
+            <span class="langopt__head"><span class="langopt__title">${title}</span><span class="opt__mark" aria-hidden="true"></span></span>
+            <span class="langopt__ex">${langExamples(ctx, id)}</span>
+          </button>`).join('')}
+        </div>
+        <p class="small muted">Поменять можно в любой момент: в настройках (значок в шапке) или в карточке аромата.</p>
+      </section>
     </div>
   </section>`;
 }
 
 export function mount(root, ctx) {
   const onClick = (e) => {
-    const el = e.target.closest('[data-act], [data-method]');
+    const el = e.target.closest('[data-act], [data-method], [data-lang]');
     if (!el) return;
+    if (el.dataset.lang) return ctx.setLang(el.dataset.lang); // не обязательный шаг: можно сразу выбирать способ
     if (el.dataset.act === 'back') return ctx.nav('', { focus: 'choose' });
     if (el.dataset.method) {
       const method = el.dataset.method;

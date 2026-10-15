@@ -44,8 +44,8 @@ export function render(ctx) {
         <h1 class="display h2">${esc(title)}</h1>
         ${q.hint ? `<p class="lead">${esc(q.hint)}</p>` : ''}
         ${hasExpert ? `<div class="seg" role="group" aria-label="Язык ответов">
-          <button type="button" class="seg__btn" data-act="lang" data-lang="plain" aria-pressed="${lang === 'plain'}">Просто</button>
-          <button type="button" class="seg__btn" data-act="lang" data-lang="expert" aria-pressed="${lang === 'expert'}">Нотами</button>
+          <button type="button" class="seg__btn" data-act="lang" data-lang="plain" aria-pressed="${lang === 'plain'}">Без терминов</button>
+          <button type="button" class="seg__btn" data-act="lang" data-lang="expert" aria-pressed="${lang === 'expert'}">На языке нот</button>
         </div>` : ''}
       </div>
       ${body}

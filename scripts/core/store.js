@@ -23,6 +23,29 @@ export function defaultState() {
     lang: 'plain', // 'plain' | 'expert' — меняет только язык описаний
     saved: [],
     compare: [],
+    gallery: null, // фильтры галереи; null — значения по умолчанию из gallery.json
+    galleryView: null, // 'cards' | 'list'; null — список на телефоне, карточки на компьютере
+  };
+}
+
+// Фильтры галереи из браузера: берём только поля правильного типа, остальное — по умолчанию.
+function cleanGallery(g) {
+  if (!g || typeof g !== 'object') return null;
+  const arr = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
+  const str = (v, d) => (typeof v === 'string' ? v : d);
+  return {
+    q: str(g.q, ''),
+    gender: str(g.gender, 'all'),
+    budget: str(g.budget, 'any'),
+    character: arr(g.character),
+    projection: typeof g.projection === 'string' ? g.projection : null,
+    occasion: arr(g.occasion),
+    brand: str(g.brand, ''),
+    seasons: arr(g.seasons),
+    families: arr(g.families),
+    levels: g.levels && typeof g.levels === 'object' && !Array.isArray(g.levels) ? Object.fromEntries(Object.entries(g.levels).filter(([, v]) => typeof v === 'string')) : {},
+    avoid: arr(g.avoid),
+    ...(typeof g.sort === 'string' ? { sort: g.sort } : {}),
   };
 }
 
@@ -44,6 +67,8 @@ export function migrate(raw) {
     tuning: Array.isArray(raw.tuning) ? raw.tuning : [],
     saved: Array.isArray(raw.saved) ? raw.saved : [],
     compare: Array.isArray(raw.compare) ? raw.compare.slice(0, 3) : [],
+    gallery: cleanGallery(raw.gallery),
+    galleryView: ['cards', 'list'].includes(raw.galleryView) ? raw.galleryView : null,
   };
 }
 

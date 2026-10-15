@@ -2,13 +2,16 @@
 
 import { esc, icons, pad2, toast, reducedMotion } from '../core/dom.js';
 import * as Sel from '../core/selection.js';
-import { slot } from '../ui/slot.js';
+import { slot, preloadImages } from '../ui/slot.js';
 import { openSheet, closeSheet } from '../ui/sheet.js';
 
 const SWIPE_COMMIT = 100; // px
 const FLY_MS = 300;
 
-const moodSlot = (m) => slot({ tone: m.tone, motif: m.motif, src: m.image?.src, alt: m.image?.alt });
+const moodSlot = (m, opts = {}) => slot({ tone: m.tone, motif: m.motif, src: m.image?.src, srcset: m.image?.srcset, alt: m.image?.alt, focus: m.image?.focus, sizes: opts.sizes ?? '(min-width: 1040px) 25vw, (min-width: 720px) 33vw, 50vw', ...opts });
+// Режим «Просто / Нотами» меняет подписи образов, но не их выбор и не подбор.
+const cardOf = (m, lang) => (lang === 'expert' ? m.cardExpert : m.card) ?? m.card;
+const detailOf = (m, lang) => (lang === 'expert' ? m.detailExpert : m.detail) ?? m.detail;
 
 export function render(ctx) {
   const { moodGroup } = ctx.state;
@@ -41,6 +44,7 @@ export function render(ctx) {
 
 export function mount(root, ctx) {
   const gender = ctx.state.gender;
+  const lang = ctx.state.lang;
   const moods = ctx.moodsFor(gender);
   const ids = moods.map((m) => m.id);
   const byId = new Map(moods.map((m) => [m.id, m]));
@@ -73,10 +77,10 @@ export function mount(root, ctx) {
     const stText = { liked: `выбран, приоритет ${pos + 1}`, maybe: 'возможно', rejected: 'не моё', none: 'не выбран' }[st];
     return `
     <div class="mcard is-${st}" data-cell="${m.id}">
-      <button type="button" class="mcard__btn" data-act="toggle" data-id="${m.id}" role="checkbox" aria-checked="${st === 'liked'}" aria-label="${esc(m.title)}: ${esc(m.hint)}. ${stText}">
+      <button type="button" class="mcard__btn" data-act="toggle" data-id="${m.id}" role="checkbox" aria-checked="${st === 'liked'}" aria-label="${esc(m.title)}: ${esc(cardOf(m, lang))}. ${stText}">
         ${moodSlot(m)}
         <span class="mcard__veil"></span>
-        <span class="mcard__body"><span class="mcard__title">${esc(m.title)}</span><span class="mcard__hint">${esc(m.hint)}</span></span>
+        <span class="mcard__body"><span class="mcard__title">${esc(m.title)}</span><span class="mcard__hint">${esc(cardOf(m, lang))}</span></span>
         <span class="mcard__check" aria-hidden="true">${pos >= 0 ? pos + 1 : ''}</span>
       </button>
       <button type="button" class="mcard__info" data-act="info" data-id="${m.id}" aria-label="Подробнее: ${esc(m.title)}"><span>i</span></button>
@@ -124,13 +128,14 @@ export function mount(root, ctx) {
             const depth = arr.length - 1 - k;
             const m = byId.get(id);
             return `<div class="deck__card" data-depth="${depth}" data-id="${id}" ${depth === 0 ? `tabindex="0" role="group" aria-label="${esc(m.title)}. Стрелка вправо — моё, влево — не моё, вверх — возможно"` : 'aria-hidden="true"'}>
-              ${moodSlot(m)}
+              ${moodSlot(m, { sizes: '(min-width: 720px) 480px, 90vw', priority: depth === 0 })}
               <div class="deck__veil"></div>
               <div class="deck__body">
                 <p class="deck__title">${esc(m.title)}</p>
-                <p class="deck__hint">${esc(m.hint)}</p>
-                <p class="deck__story">${esc(m.story)}</p>
+                <p class="deck__hint">${esc(cardOf(m, lang))}</p>
+                <p class="deck__story">${esc(detailOf(m, lang))}</p>
               </div>
+              ${depth === 0 ? `<button type="button" class="mcard__info deck__info" data-act="info" data-id="${id}" aria-label="Подробнее: ${esc(m.title)}"><span>i</span></button>` : ''}
               <span class="deck__stamp deck__stamp--like" aria-hidden="true">Моё</span>
               <span class="deck__stamp deck__stamp--nope" aria-hidden="true">Не моё</span>
               <span class="deck__stamp deck__stamp--maybe" aria-hidden="true">Возможно</span>
@@ -148,7 +153,32 @@ export function mount(root, ctx) {
         </div>
       </div>`;
     attachDrag();
+    fitDeck(true);
+    // Следующие фото подгружаем заранее, чтобы при свайпе не было пустой карточки.
+    preloadImages(list.slice(1, 3).map((id) => byId.get(id)));
   };
+
+  // Размер карточки — по реальному месту: карточка и кнопки должны поместиться над нижней панелью.
+  // На низких экранах страница сама прокручивается так, чтобы колода оказалась под шапкой.
+  function fitDeck(allowScroll = false) {
+    const stack = viewSlot.querySelector('.deck__stack');
+    if (!stack) return;
+    const extra = viewSlot.querySelector('.deck__meta').offsetHeight + viewSlot.querySelector('.deck__controls').offsetHeight + 36;
+    const trayH = traySlot.getBoundingClientRect().height;
+    const space = () => window.innerHeight - trayH - extra - stack.getBoundingClientRect().top;
+    let avail = space();
+    if (avail < 300 && allowScroll) {
+      const top = root.querySelector('.moods-top');
+      const hdr = document.querySelector('.hdr').getBoundingClientRect().height;
+      window.scrollTo(0, Math.max(0, top.getBoundingClientRect().top + window.scrollY - hdr - 8));
+      avail = space();
+    }
+    const h = Math.max(220, Math.min(600, avail, viewSlot.clientWidth * 1.25));
+    stack.style.height = `${Math.round(h)}px`;
+    stack.classList.toggle('is-compact', h < 330);
+  }
+  const onResize = () => fitDeck(false);
+  window.addEventListener('resize', onResize);
 
   function decide(id, dir) {
     if (dir === 'like') {
@@ -176,7 +206,7 @@ export function mount(root, ctx) {
     if (!card) return;
     const next = viewSlot.querySelector('.deck__card[data-depth="1"]');
     card.addEventListener('pointerdown', (e) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || e.target.closest('[data-act]')) return; // кнопка «i» на карточке — не свайп
       drag = { x: e.clientX, y: e.clientY, dx: 0, dy: 0, t: performance.now() };
       card.setPointerCapture(e.pointerId);
       card.classList.add('is-dragging');
@@ -230,8 +260,8 @@ export function mount(root, ctx) {
       title: m.title,
       html: `<div class="pd">
         <div class="pd__media">${slot({ tone: m.tone, motif: m.motif, src: m.image?.src, alt: m.image?.alt, ratio: '16 / 10' })}</div>
-        <div class="pd__head"><p class="eyebrow">Образ</p><h2 class="pd__name">${esc(m.title)}</h2><p class="pd__atm">${esc(m.story)}</p></div>
-        <section class="pd__sec"><p class="eyebrow">В аромате</p><p>${esc(ctx.store.get().lang === 'expert' ? m.hintExpert : m.hint)}</p></section>
+        <div class="pd__head"><p class="eyebrow">Образ</p><h2 class="pd__name">${esc(m.title)}</h2><p class="pcard__short">${esc(cardOf(m, lang))}</p></div>
+        <section class="pd__sec"><p class="eyebrow">Какой запах ждать</p><p class="pd__plain">${esc(detailOf(m, lang))}</p><p class="small muted">Образ — направление. Это не значит, что каждый подобранный аромат буквально пахнет всем перечисленным.</p></section>
       </div>`,
       foot: `<button type="button" class="btn btn--primary btn--block" data-pick="${m.id}" ${st === 'liked' ? 'disabled' : ''}>${st === 'liked' ? 'Уже выбран' : 'Это моё'}</button>`,
       onMount: (panel) => panel.querySelector('[data-pick]')?.addEventListener('click', () => {
@@ -282,11 +312,12 @@ export function mount(root, ctx) {
 
   const unsub = ctx.store.subscribe(renderTray);
   root.addEventListener('click', onClick);
+  renderTray(); // сначала панель: её высота нужна, чтобы подогнать карточку
   renderView();
-  renderTray();
   return () => {
     unsub();
     root.removeEventListener('click', onClick);
+    window.removeEventListener('resize', onResize);
     document.documentElement.style.setProperty('--tray', '0px');
   };
 }
