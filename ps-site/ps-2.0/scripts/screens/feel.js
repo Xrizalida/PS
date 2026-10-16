@@ -23,7 +23,7 @@ export function render(ctx) {
       <div class="head">
         <p class="eyebrow">По ощущениям</p>
         <h1 class="display h2">Как смотреть образы?</h1>
-        <p class="lead">Выбор общий: можно начать в одном виде и переключиться в другой — отмеченное сохранится.</p>
+        <p class="lead">Отмеченное сохранится, если переключишься.</p>
       </div>
       <div class="bigcards">
         <button type="button" class="bigcard bigcard--feel" data-view="catalog" aria-pressed="${moodView === 'catalog'}">
@@ -32,7 +32,7 @@ export function render(ctx) {
           <span class="bigcard__num">01</span>
           <span class="bigcard__arrow">${icons.arrow}</span>
           <span class="bigcard__title display">Каталог образов</span>
-          <span class="bigcard__text">Все ${moods.length} на одном экране — выбирай, сравнивая</span>
+          <span class="bigcard__text">Все образы на одном экране</span>
         </button>
         <button type="button" class="bigcard bigcard--feel" data-view="swipe" aria-pressed="${moodView === 'swipe'}">
           ${single ? `${thumb(single, '(min-width: 720px) 50vw, 50vw')}<span class="feel-stack" aria-hidden="true"></span>` : '<span class="schema schema--stack" aria-hidden="true"><i></i><i></i><i></i></span>'}
@@ -40,7 +40,7 @@ export function render(ctx) {
           <span class="bigcard__num">02</span>
           <span class="bigcard__arrow">${icons.arrow}</span>
           <span class="bigcard__title display">Карточки по одной</span>
-          <span class="bigcard__text">Одна карточка — одно решение: моё или не моё</span>
+          <span class="bigcard__text">Свайп: нравится или нет</span>
         </button>
       </div>
     </div>

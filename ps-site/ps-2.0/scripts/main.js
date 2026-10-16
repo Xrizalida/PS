@@ -16,11 +16,10 @@ import * as tier from './screens/tier.js';
 import * as quiz from './screens/quiz.js';
 import * as finish from './screens/finish.js';
 import * as results from './screens/results.js';
-import * as gallery from './screens/gallery.js';
 import { watchSlotImages } from './ui/slot.js';
 
-const SCREENS = { '': intro, method, feel, moods, tier, quiz, finish, results, gallery };
-const NEEDS_CATALOG = ['quiz', 'finish', 'results', 'gallery'];
+const SCREENS = { '': intro, method, feel, moods, tier, quiz, finish, results };
+const NEEDS_CATALOG = ['quiz', 'finish', 'results'];
 
 const load = async (path) => {
   const res = await fetch(new URL(path, document.baseURI), { cache: 'no-cache' });
@@ -31,7 +30,6 @@ const load = async (path) => {
 // Куда можно попасть: без пола — только вступление, без способа — выбор способа и т. д.
 function guard(route, s, questions) {
   if (!(route in SCREENS)) return '';
-  if (route === 'gallery') return route; // галерея — самостоятельный путь, пол и анкета не нужны
   if (route !== '' && !s.gender) return '';
   if (['feel', 'moods', 'tier', 'quiz', 'finish', 'results'].includes(route) && !s.method) return 'method';
   if (['feel', 'moods'].includes(route) && s.method !== 'moods') return 'tier';
@@ -45,11 +43,11 @@ async function boot() {
   const [moodsMale, moodsFemale, dimensions, config, texts] = await Promise.all(
     ['moods-male', 'moods-female', 'dimensions', 'algorithm-config', 'texts'].map((n) => load(`../data/${n}.json`)),
   );
-  const [moodsDisplay, perfumesDisplay, questionsJson, glossaryJson, media, galleryCfg, popularity] = await Promise.all(
-    ['moods-display', 'perfumes-display', 'questions', 'notes-glossary', 'media', 'gallery', 'popularity'].map((n) => load(`data/${n}.json`)),
+  const [moodsDisplay, perfumesDisplay, questionsJson, glossaryJson, media] = await Promise.all(
+    ['moods-display', 'perfumes-display', 'questions', 'notes-glossary', 'media'].map((n) => load(`data/${n}.json`)),
   );
   const questions = questionsJson.questions;
-  const display = { moods: moodsDisplay, perfumes: perfumesDisplay.perfumes, media, gallery: galleryCfg, popularity };
+  const display = { moods: moodsDisplay, perfumes: perfumesDisplay.perfumes, media };
   watchSlotImages();
   const glossary = createGlossary(glossaryJson);
   const store = createStore();
@@ -110,14 +108,9 @@ async function boot() {
     toast(gender === 'female' ? 'Женский режим. Ответы сохранены.' : 'Мужской режим. Ответы сохранены.');
     if (current) show(current, { force: true, keepSheet: true });
   };
-  const setLang = (lang) => {
-    if (lang === store.get().lang) return;
-    store.update((s) => ({ ...s, lang }));
-    if (current !== null) show(current, { force: true, keepScroll: true, keepSheet: true });
-  };
 
   const ctxBase = {
-    store, config, texts, questions, display, glossary, moodsFor, ensureData, setLang,
+    store, config, texts, questions, display, glossary, moodsFor, ensureData,
     get data() { return data; },
     perfumeName: (id) => { const p = data?.byId.get(id); return p ? `${p.brand} ${p.name}` : id; },
   };
@@ -127,28 +120,19 @@ async function boot() {
     openSheet({
       title: 'Настройки',
       html: `<div class="settings">
-        <div class="head"><p class="eyebrow">Настройки</p><h2 class="display h3">Как показывать подбор</h2></div>
-        <div class="settings__item"><p class="eyebrow">Язык описаний</p>
-          <div class="seg seg--full" role="group" aria-label="Язык описаний">
-            <button type="button" class="seg__btn" data-set-lang="plain" aria-pressed="${s.lang === 'plain'}">Без терминов</button>
-            <button type="button" class="seg__btn" data-set-lang="expert" aria-pressed="${s.lang === 'expert'}">На языке нот</button>
-          </div>
-          <p class="small muted">Меняет только язык описаний. Подборка от этого не меняется.</p></div>
+        <div class="head"><h2 class="display h3">Настройки</h2></div>
         ${s.gender ? `<div class="settings__item"><p class="eyebrow">Режим</p>
           <div class="seg seg--full" role="group" aria-label="Режим">
             <button type="button" class="seg__btn" data-set-gender="male" aria-pressed="${s.gender === 'male'}">Мужское</button>
             <button type="button" class="seg__btn" data-set-gender="female" aria-pressed="${s.gender === 'female'}">Женское</button>
           </div></div>` : ''}
-        <p class="small muted">Ответы и сохранённое хранятся только в этом браузере. Мы не собираем имена, телефоны и почту.</p>
+        <p class="small muted">Ответы и сохранённое хранятся только в этом браузере.</p>
       </div>`,
       onMount: (panel) => panel.addEventListener('click', (e) => {
-        const l = e.target.closest('[data-set-lang]');
         const g = e.target.closest('[data-set-gender]');
-        if (l) setLang(l.dataset.setLang);
-        if (g) setGender(g.dataset.setGender);
-        if (l || g) {
+        if (g) {
+          setGender(g.dataset.setGender);
           const st = store.get();
-          panel.querySelectorAll('[data-set-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setLang === st.lang)));
           panel.querySelectorAll('[data-set-gender]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setGender === st.gender)));
         }
       }),
@@ -156,13 +140,11 @@ async function boot() {
   };
 
   document.querySelector('.hdr').addEventListener('click', async (e) => {
-    const el = e.target.closest('[data-gender], [data-lang], [data-open], [data-home]');
+    const el = e.target.closest('[data-gender], [data-open], [data-home]');
     if (!el) return;
     if (el.dataset.home !== undefined) { e.preventDefault(); return nav(''); }
     if (el.dataset.gender) return setGender(el.dataset.gender);
-    if (el.dataset.lang) return setLang(el.dataset.lang);
     if (el.dataset.open === 'settings') return openSettings();
-    if (el.dataset.open === 'gallery') return nav('gallery');
     if (el.dataset.open === 'saved') {
       await ensureData();
       return openSaved({ ...ctxBase });
@@ -181,6 +163,8 @@ async function boot() {
   async function show(requested, opts = {}) {
     const { force = false, keepScroll = false, keepSheet = false } = opts;
     const s = store.get();
+    // Старая ссылка на убранную галерею ароматов ведёт к выбору пути подбора.
+    if (requested === 'gallery') return nav(s.gender ? 'method' : '', s.gender ? { force: true } : { force: true, focus: 'choose' });
     const route = guard(requested, s, questions);
     if (route !== requested) return nav(route);
     if (route === current && !force) return;

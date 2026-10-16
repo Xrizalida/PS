@@ -4,15 +4,14 @@ import { esc, icons, pad2, reducedMotion } from '../core/dom.js';
 import { questionsForTier } from '../core/request.js';
 import { isEligible, genderAllowed } from '../../../scripts/engine/index.js';
 
-const optLabel = (o, gender, lang) => (lang === 'expert' && o.expert) || (gender === 'female' && o.female) || o.label;
+const optLabel = (o, gender) => (gender === 'female' && o.female) || o.label;
 
 export function render(ctx) {
-  const { tier, quiz, gender, lang } = ctx.state;
+  const { tier, quiz, gender } = ctx.state;
   const list = questionsForTier(ctx.questions, tier);
   const index = Math.min(quiz.index, list.length - 1);
   const q = list[index];
   const answer = quiz.answers[q.id];
-  const hasExpert = q.options?.some((o) => o.expert);
   const title = (gender === 'female' && q.titleFemale) || q.title;
   const progress = list.map((_, i) => `<i class="${i < index ? 'is-done' : i === index ? 'is-now' : ''}"></i>`).join('');
 
@@ -26,7 +25,7 @@ export function render(ctx) {
   } else {
     const chosen = Array.isArray(answer) ? answer : answer != null ? [answer] : [];
     body = `<div class="opts${q.options.length > 4 ? ' opts--two' : ''}" role="group" aria-label="${esc(title)}">
-      ${q.options.map((o) => `<button type="button" class="opt${q.type === 'multi' ? ' opt--multi' : ''}" data-act="pick" data-id="${o.id}" aria-pressed="${chosen.includes(o.id)}"><span>${esc(optLabel(o, gender, lang))}</span><span class="opt__mark" aria-hidden="true"></span></button>`).join('')}
+      ${q.options.map((o) => `<button type="button" class="opt${q.type === 'multi' ? ' opt--multi' : ''}" data-act="pick" data-id="${o.id}" aria-pressed="${chosen.includes(o.id)}"><span>${esc(optLabel(o, gender))}</span><span class="opt__mark" aria-hidden="true"></span></button>`).join('')}
     </div>`;
   }
 
@@ -43,14 +42,10 @@ export function render(ctx) {
       <div class="q-head">
         <h1 class="display h2">${esc(title)}</h1>
         ${q.hint ? `<p class="lead">${esc(q.hint)}</p>` : ''}
-        ${hasExpert ? `<div class="seg" role="group" aria-label="Язык ответов">
-          <button type="button" class="seg__btn" data-act="lang" data-lang="plain" aria-pressed="${lang === 'plain'}">Без терминов</button>
-          <button type="button" class="seg__btn" data-act="lang" data-lang="expert" aria-pressed="${lang === 'expert'}">На языке нот</button>
-        </div>` : ''}
       </div>
       ${body}
     </div>
-    ${needsNext ? `<div class="dock"><div class="wrap dock__inner" style="max-width:720px"><button type="button" class="btn btn--primary btn--block" data-act="next">${(Array.isArray(answer) && answer.length) ? (last ? 'К последнему штриху' : 'Дальше') : 'Пропустить'} ${icons.arrow}</button></div></div>` : ''}
+    ${needsNext ? `<div class="dock"><div class="wrap dock__inner" style="max-width:720px"><button type="button" class="btn btn--primary btn--block" data-act="next">${(Array.isArray(answer) && answer.length) ? (last ? 'Готово' : 'Дальше') : 'Пропустить'} ${icons.arrow}</button></div></div>` : ''}
   </section>`;
 }
 
@@ -91,7 +86,6 @@ export function mount(root, ctx) {
     if (!el || locked) return;
     const { act, id } = el.dataset;
     if (act === 'back') return go(-1);
-    if (act === 'lang') return ctx.setLang(el.dataset.lang);
     if (act === 'next') return go(1);
     if (act === 'pick' && q.type === 'single') {
       setAnswer(id);

@@ -1,6 +1,7 @@
 // Ответы PS 2.0 → запрос к общему алгоритму подбора (scripts/engine).
 // Сам алгоритм не меняется: 2.0 только собирает для него запрос в том же формате, что и версия 1.
-// Режим «Просто / Нотами» сюда не попадает — он меняет язык, а не результат.
+
+import { MIN_LIKED } from './selection.js';
 
 export const TIER_ORDER = ['edt', 'edp', 'parfum'];
 
@@ -43,9 +44,13 @@ export function buildRequest(state, data, questions) {
   };
 
   if (state.method === 'moods') {
+    // Все понравившиеся образы (3–7) в порядке выбора; профиль — средневзвешенный, поэтому
+    // больше образов не «усиливает» его. Отложенные идут после понравившихся, с меньшим весом.
+    // Запреты «лучше без» — только из трёх главных образов, чтобы 7 образов не сужали подбор.
     const sel = state.moods[gender];
     sel.liked.forEach((id, i) => request.moods.push({ id, priority: i + 1 }));
-    sel.maybe.slice(0, data.config.maxMaybeMoods).forEach((id, i) => request.moods.push({ id, priority: 4 + i }));
+    sel.maybe.slice(0, data.config.maxMaybeMoods).forEach((id, i) => request.moods.push({ id, priority: sel.liked.length + 1 + i }));
+    request.avoidMoodLimit = 3;
   }
 
   if (state.method === 'quiz') {
@@ -93,7 +98,7 @@ export function canShowResults(state, questions) {
   if (!state.gender || !state.method) return false;
   if (state.method === 'moods') {
     const sel = state.moods[state.gender];
-    return sel.liked.length > 0 || sel.maybe.length > 0;
+    return sel.liked.length >= MIN_LIKED; // отложенные в минимум не входят
   }
   return questionsForTier(questions, state.tier).some((q) => state.quiz.answers[q.id] != null);
 }

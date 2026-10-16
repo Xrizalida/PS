@@ -28,7 +28,7 @@ export const segmentShort = (p) => {
   return s ? `Сегмент: ${s.label.toLowerCase()} · ${s.range.replace('обычно ', '')}` : 'Цена уточняется';
 };
 
-// Заметность словами (режим «Просто») — по шкалам интенсивности и шлейфа каталога.
+// Заметность словами — по шкалам интенсивности и шлейфа каталога.
 export function presenceWords(p) {
   const i = p.scales.intensity;
   const s = p.scales.sillage;
@@ -50,30 +50,27 @@ export const TIERS = [
 ];
 export const FREE_NOTE = 'сейчас бесплатно в рамках тестирования';
 
-// «Что точно не нравится» — по-простому и нотами. id — стоп-факторы из data/dimensions.json.
+// «Что точно не нравится» — простыми словами. id — стоп-факторы из data/dimensions.json.
 export const STOPS = [
-  { id: 'cloying-sweet', plain: 'Приторно-сладкое', expert: 'Приторная сладость', main: true },
-  { id: 'smoky', plain: 'Дым и костёр', expert: 'Дымные ноты', main: true },
-  { id: 'heavy-leather', plain: 'Тяжёлая кожа', expert: 'Кожаные аккорды', main: true },
-  { id: 'oud', plain: 'Густое тёмное дерево (уд)', expert: 'Уд', main: true },
-  { id: 'powdery', plain: 'Пудра, как косметика', expert: 'Пудровость', main: true },
-  { id: 'loud', plain: 'Слишком громко', expert: 'Высокая интенсивность и шлейф', main: true },
-  { id: 'white-floral', plain: 'Густые белые цветы', expert: 'Белые цветы: тубероза, жасмин', main: true },
-  { id: 'incense', plain: 'Церковный ладан', expert: 'Ладан', main: true },
-  { id: 'gourmand', plain: 'Запах десерта', expert: 'Гурманские ноты' },
-  { id: 'tobacco', plain: 'Табак', expert: 'Табачные ноты' },
-  { id: 'rose', plain: 'Роза', expert: 'Роза' },
-  { id: 'marine', plain: 'Морской запах', expert: 'Морские ноты' },
-  { id: 'soapy', plain: 'Мыло', expert: 'Мыльность' },
-  { id: 'boozy', plain: 'Алкоголь', expert: 'Алкогольные ноты' },
-  { id: 'animalic', plain: 'Звериные ноты', expert: 'Анималистика' },
-  { id: 'citrus-heavy', plain: 'Много цитруса', expert: 'Цитрусовый акцент' },
+  { id: 'cloying-sweet', plain: 'Приторно-сладкое', main: true },
+  { id: 'smoky', plain: 'Дым и костёр', main: true },
+  { id: 'heavy-leather', plain: 'Тяжёлая кожа', main: true },
+  { id: 'oud', plain: 'Густое тёмное дерево (уд)', main: true },
+  { id: 'powdery', plain: 'Пудра, как косметика', main: true },
+  { id: 'loud', plain: 'Слишком громко', main: true },
+  { id: 'white-floral', plain: 'Густые белые цветы', main: true },
+  { id: 'incense', plain: 'Церковный ладан', main: true },
+  { id: 'gourmand', plain: 'Запах десерта' },
+  { id: 'tobacco', plain: 'Табак' },
+  { id: 'rose', plain: 'Роза' },
+  { id: 'marine', plain: 'Морской запах' },
+  { id: 'soapy', plain: 'Мыло' },
+  { id: 'boozy', plain: 'Алкоголь' },
+  { id: 'animalic', plain: 'Звериные ноты' },
+  { id: 'citrus-heavy', plain: 'Много цитруса' },
 ];
 
-export const stopLabel = (id, lang) => {
-  const s = STOPS.find((x) => x.id === id);
-  return s ? s[lang] ?? s.plain : id;
-};
+export const stopLabel = (id) => STOPS.find((x) => x.id === id)?.plain ?? id;
 
 // Сезоны и ситуации одной строкой: «Осень, зима · офис, вечер».
 export function whenLine(p, dimensions) {

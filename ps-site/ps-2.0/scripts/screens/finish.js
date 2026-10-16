@@ -3,34 +3,33 @@
 import { esc, icons } from '../core/dom.js';
 import { BUDGETS, STOPS } from '../core/format.js';
 
-export const stopsChips = (stops, lang, showAll) =>
+export const stopsChips = (stops, showAll) =>
   STOPS.filter((s) => showAll || s.main || stops.includes(s.id))
-    .map((s) => `<button type="button" class="chip" data-act="stop" data-id="${s.id}" aria-pressed="${stops.includes(s.id)}">${esc(s[lang] ?? s.plain)}</button>`)
+    .map((s) => `<button type="button" class="chip" data-act="stop" data-id="${s.id}" aria-pressed="${stops.includes(s.id)}">${esc(s.plain)}</button>`)
     .join('');
 
 export const budgetSeg = (budget) =>
   `<div class="seg seg--full" role="group" aria-label="Бюджет">${BUDGETS.map((b) => `<button type="button" class="seg__btn" data-act="budget" data-id="${b.id}" aria-pressed="${budget === b.id}">${esc(b.label)}</button>`).join('')}</div>`;
 
 export function render(ctx) {
-  const { finish, lang } = ctx.state;
+  const { finish } = ctx.state;
   const allShown = finish.stops.some((id) => !STOPS.find((s) => s.id === id)?.main);
   return `
   <section class="screen">
     <div class="wrap" style="max-width:720px">
       <button type="button" class="back" data-act="back">${icons.back} Назад</button>
       <div class="head">
-        <p class="eyebrow">Последний штрих</p>
-        <h1 class="display h2">Пара уточнений — и всё</h1>
-        <p class="lead">Оба пункта необязательны. Поменять их можно и потом, прямо в подборке.</p>
+        <h1 class="display h2">Последний штрих</h1>
+        <p class="lead">Можно пропустить.</p>
       </div>
       <div class="block">
         <h2 class="display block__title">Бюджет на флакон</h2>
         ${budgetSeg(finish.budget)}
-        <p class="small muted">Ориентир по ценовому сегменту — точные цены пока не проверены.</p>
+        <p class="small muted">Цены ориентировочные.</p>
       </div>
       <div class="block">
         <h2 class="display block__title">Что точно не нравится?</h2>
-        <div class="chips" data-slot="stops">${stopsChips(finish.stops, lang, allShown)}</div>
+        <div class="chips" data-slot="stops">${stopsChips(finish.stops, allShown)}</div>
         ${allShown ? '' : '<button type="button" class="btn btn--text more" data-act="more">Показать ещё</button>'}
       </div>
     </div>
@@ -57,7 +56,7 @@ export function mount(root, ctx) {
       el.setAttribute('aria-pressed', String(!on));
     }
     if (act === 'more') {
-      stopsSlot.innerHTML = stopsChips(ctx.store.get().finish.stops, ctx.store.get().lang, true);
+      stopsSlot.innerHTML = stopsChips(ctx.store.get().finish.stops, true);
       el.remove();
     }
     if (act === 'go') ctx.nav('results');

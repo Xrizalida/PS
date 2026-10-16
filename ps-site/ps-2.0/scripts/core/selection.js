@@ -1,8 +1,10 @@
 // Выбор образов PS 2.0 — одно состояние для каталога и для карточек по одной.
-// liked — основные образы (до 3, порядок = приоритет), maybe — «возможно», rejected — «не моё».
+// liked — понравившиеся образы (порядок = приоритет), maybe — «отложить», rejected — «не нравится».
+// Для подбора нужно минимум 3 понравившихся, отметить можно до 7. «Отложенные» в минимум не входят.
 // Своя копия логики версии 1, чтобы изменения в одной версии не ломали другую.
 
-export const MAX_LIKED = 3;
+export const MIN_LIKED = 3;
+export const MAX_LIKED = 7;
 
 export const emptySelection = () => ({ liked: [], maybe: [], rejected: [] });
 
@@ -16,12 +18,12 @@ export function statusOf(sel, id) {
   return 'none';
 }
 
-// «Моё». Если основных уже три — образ уходит в «возможно» (overflow = true).
+// «Нравится». Если уже отмечено 7 — ничего не меняем (full = true): сначала нужно снять одну отметку.
 export function like(sel, id) {
-  if (sel.liked.includes(id)) return { sel, overflow: false };
+  if (sel.liked.includes(id)) return { sel, full: false };
+  if (sel.liked.length >= MAX_LIKED) return { sel, full: true };
   const base = clean(sel, id);
-  if (base.liked.length >= MAX_LIKED) return { sel: { ...base, maybe: [...base.maybe, id] }, overflow: true };
-  return { sel: { ...base, liked: [...base.liked, id] }, overflow: false };
+  return { sel: { ...base, liked: [...base.liked, id] }, full: false };
 }
 
 export const maybe = (sel, id) => {
@@ -36,7 +38,7 @@ export const reject = (sel, id) => {
 
 export const reset = (sel, id) => clean(sel, id);
 
-export const toggleLike = (sel, id) => (sel.liked.includes(id) ? { sel: reset(sel, id), overflow: false } : like(sel, id));
+export const toggleLike = (sel, id) => (sel.liked.includes(id) ? { sel: reset(sel, id), full: false } : like(sel, id));
 
 // Колода: образы без решения в исходном порядке; «revisit» — отложенные и отклонённые.
 export function deck(ids, sel, mode = 'new') {
@@ -46,4 +48,6 @@ export function deck(ids, sel, mode = 'new') {
 
 export const decidedCount = (sel) => sel.liked.length + sel.maybe.length + sel.rejected.length;
 
-export const hasChoice = (sel) => sel.liked.length > 0 || sel.maybe.length > 0;
+// Можно ли подбирать: не меньше трёх понравившихся.
+export const canProceed = (sel) => sel.liked.length >= MIN_LIKED;
+export const missing = (sel) => Math.max(0, MIN_LIKED - sel.liked.length);

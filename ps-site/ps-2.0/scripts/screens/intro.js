@@ -5,15 +5,10 @@ import { esc, icons, clamp, reducedMotion } from '../core/dom.js';
 import { slot } from '../ui/slot.js';
 
 const SCENES = [
-  { eyebrow: 'PS. — Parfum Selection', title: 'Не выбирай ноты. Выбирай ощущения.', lead: 'Подбор аромата по настроению, а не по составу.' },
-  { eyebrow: 'Знакомо?', title: 'Сто флаконов — и все похожи.', lead: 'После третьего блоттера нос устаёт, а названия нот ничего не объясняют.' },
-  { eyebrow: 'Как работает PS', title: 'Мы начинаем с ощущения.', lead: 'Выбери образы, ответь на несколько простых вопросов или изучи галерею — и получи понятные описания, а не список нот.' },
+  { eyebrow: 'PS. — Parfum Selection', title: 'Не выбирай ноты. Выбирай ощущения.', lead: 'Подбор аромата по настроению.' },
+  { eyebrow: 'Знакомо?', title: 'Сто флаконов — и все похожи.', lead: 'Названия нот почти ничего не объясняют.' },
+  { eyebrow: 'Как работает PS', title: 'Мы начинаем с ощущения.', lead: 'Выбери образы или ответь на пару вопросов — PS подберёт ароматы и объяснит выбор.' },
 ];
-
-// Фото галереи — фоном широкой карточки; без фото остаются «полки» из линий.
-const galleryPhoto = (g) => (g?.src
-  ? slot({ tone: 'cocoa', motif: 'frame', src: g.src, srcset: g.srcset, alt: g.alt, focus: g.focus, sizes: '(min-width: 720px) 100vw, 100vw', cls: 'slot--gallery' })
-  : '<span class="schema schema--shelf" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>');
 
 export function render(ctx) {
   const media = ctx.display.media;
@@ -63,20 +58,11 @@ export function render(ctx) {
       <div class="head">
         <p class="eyebrow">Шаг 1</p>
         <h2 class="display h2" id="choose-title">Для кого подбираем?</h2>
-        <p class="lead">Ароматы унисекс попадают в обе подборки.</p>
+        <p class="lead">Унисекс попадает в обе подборки.</p>
       </div>
       <div class="bigcards bigcards--choose">
         ${genderCard('male', 1, 'Мужское', 'Дерево, кожа, прохлада, вечерний город')}
         ${genderCard('female', 2, 'Женское', 'Ткани, тёплый свет, цветы, пудра')}
-        <button type="button" class="bigcard bigcard--wide bigcard--gallery" data-act="gallery">
-          ${galleryPhoto(media.gallery)}
-          <span class="bigcard__veil"></span>
-          <span class="bigcard__num">03 · без подбора</span>
-          <span class="bigcard__arrow">${icons.arrow}</span>
-          <span class="bigcard__title display">Галерея ароматов</span>
-          <span class="bigcard__text">100 ароматов. Твой вкус. Твои правила.</span>
-          <span class="bigcard__meta">Поиск, фильтры и подробные описания — без анкеты</span>
-        </button>
       </div>
     </div>
   </section>`;
@@ -130,7 +116,6 @@ export function mount(root, ctx) {
   const onClick = (e) => {
     const el = e.target.closest('[data-act], [data-gender]');
     if (!el) return;
-    if (el.dataset.act === 'gallery') return ctx.nav('gallery');
     if (el.dataset.act === 'skip') {
       if (ctx.store.get().gender) return ctx.nav('method');
       root.querySelector('#choose').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });

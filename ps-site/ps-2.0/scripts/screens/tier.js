@@ -25,7 +25,7 @@ export function render(ctx) {
       <div class="head">
         <p class="eyebrow">По анкете</p>
         <h1 class="display h2">Сколько вопросов готов ответить?</h1>
-        <p class="lead">Чем больше ответов, тем точнее подборка и тем больше в ней ароматов.</p>
+        <p class="lead">Больше ответов — точнее подборка.</p>
       </div>
       <div class="tiers">${cards}</div>
     </div>

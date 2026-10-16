@@ -1,17 +1,19 @@
 // Выбор образов: «Каталог» (2 в ряд на телефоне) и «По одной» (свайп). Состояние выбора общее.
+// Для подбора нужно минимум 3 понравившихся образа, отметить можно до 7 — об ограничении говорим,
+// только когда человек пытается отметить восьмой.
 
-import { esc, icons, pad2, toast, reducedMotion } from '../core/dom.js';
+import { esc, icons, deckIcons, toast, reducedMotion } from '../core/dom.js';
 import * as Sel from '../core/selection.js';
 import { slot, preloadImages } from '../ui/slot.js';
 import { openSheet, closeSheet } from '../ui/sheet.js';
 
 const SWIPE_COMMIT = 100; // px
 const FLY_MS = 300;
+const FULL_MSG = 'Чтобы добавить этот образ, сними отметку с одного из выбранных';
 
 const moodSlot = (m, opts = {}) => slot({ tone: m.tone, motif: m.motif, src: m.image?.src, srcset: m.image?.srcset, alt: m.image?.alt, focus: m.image?.focus, sizes: opts.sizes ?? '(min-width: 1040px) 25vw, (min-width: 720px) 33vw, 50vw', ...opts });
-// Режим «Просто / Нотами» меняет подписи образов, но не их выбор и не подбор.
-const cardOf = (m, lang) => (lang === 'expert' ? m.cardExpert : m.card) ?? m.card;
-const detailOf = (m, lang) => (lang === 'expert' ? m.detailExpert : m.detail) ?? m.detail;
+
+const needText = (n) => `Выбери ещё ${n === 1 ? 'один образ' : n === 2 ? 'два образа' : 'три образа'}`;
 
 export function render(ctx) {
   const { moodGroup } = ctx.state;
@@ -22,9 +24,8 @@ export function render(ctx) {
     <div class="wrap">
       <button type="button" class="back" data-act="back">${icons.back} Назад</button>
       <div class="head">
-        <p class="eyebrow">По ощущениям</p>
         <h1 class="display h2">Что тебе ближе?</h1>
-        <p class="lead">До трёх образов. Первый выбранный — главный.</p>
+        <p class="lead">Отметь образы, которые откликаются.</p>
       </div>
       <div class="moods-top">
         <div class="seg" role="group" aria-label="Вид">
@@ -44,7 +45,6 @@ export function render(ctx) {
 
 export function mount(root, ctx) {
   const gender = ctx.state.gender;
-  const lang = ctx.state.lang;
   const moods = ctx.moodsFor(gender);
   const ids = moods.map((m) => m.id);
   const byId = new Map(moods.map((m) => [m.id, m]));
@@ -55,38 +55,46 @@ export function mount(root, ctx) {
   const filterSlot = root.querySelector('[data-slot="filter"]');
   document.documentElement.style.setProperty('--tray', '92px');
 
-  // ---------- Панель выбранного ----------
+  // ---------- Нижняя панель: подсказка, пока выбрано меньше трёх; потом — выбранные образы и кнопка подбора ----------
   const renderTray = () => {
     const s = sel();
-    const chips = s.liked.map((id, i) => `<button type="button" class="tray__chip" data-act="unlike" data-id="${id}" aria-label="Убрать «${esc(byId.get(id)?.title)}»"><b>${i + 1}</b>${esc(byId.get(id)?.title)}<span class="chip__x" aria-hidden="true">×</span></button>`).join('');
-    const maybeNote = s.maybe.length ? `<span class="tray__chip">◇ возможно: ${s.maybe.length}</span>` : '';
+    const chips = s.liked.map((id) => `<button type="button" class="tray__chip" data-act="unlike" data-id="${id}" aria-label="Убрать «${esc(byId.get(id)?.title)}»">${esc(byId.get(id)?.title)}<span class="chip__x" aria-hidden="true">×</span></button>`).join('');
+    const ready = Sel.canProceed(s);
     traySlot.innerHTML = `
       <div class="wrap dock__inner">
         <div class="tray__info">
-          <span class="tray__count">Выбрано ${s.liked.length} из ${Sel.MAX_LIKED}</span>
-          ${s.liked.length || s.maybe.length ? `<div class="tray__chips">${chips}${maybeNote}</div>` : '<span class="tray__empty">Отметь хотя бы один образ</span>'}
+          ${ready ? `<div class="tray__chips">${chips}</div>` : `<span class="tray__empty">${needText(Sel.missing(s))}</span>`}
         </div>
-        <button type="button" class="btn btn--primary" data-act="next" ${Sel.hasChoice(s) ? '' : 'disabled'}>Дальше ${icons.arrow}</button>
+        <button type="button" class="btn btn--primary" data-act="next" ${ready ? '' : 'disabled'}>Подобрать ароматы</button>
       </div>`;
   };
 
+  // Когда набралось три — один раз мягко сообщаем, что уже можно подбирать.
+  let announced = Sel.canProceed(sel());
+  const afterLike = (r) => {
+    if (r.full) return toast(FULL_MSG);
+    if (!announced && Sel.canProceed(r.sel)) {
+      announced = true;
+      toast('Уже можно подобрать ароматы — или выбери ещё');
+    }
+  };
+
   // ---------- Каталог ----------
-  const MARK = { maybe: '◇', rejected: '×' };
   const stateOf = (id) => {
     const st = Sel.statusOf(sel(), id);
-    const pos = sel().liked.indexOf(id);
-    const stText = { liked: `выбран, приоритет ${pos + 1}`, maybe: 'возможно', rejected: 'не моё', none: 'не выбран' }[st];
-    return { st, pos, stText, mark: pos >= 0 ? String(pos + 1) : MARK[st] ?? '' };
+    const stText = { liked: 'нравится', maybe: 'отложен', rejected: 'не нравится', none: 'не выбран' }[st];
+    const mark = st === 'liked' ? icons.check : st === 'maybe' ? '?' : st === 'rejected' ? '×' : '';
+    return { st, stText, mark };
   };
   // Первые карточки видны сразу — их фото грузим без очереди, остальные по мере прокрутки.
   const cell = (m, i) => {
-    const { st, pos, stText, mark } = stateOf(m.id);
+    const { st, stText, mark } = stateOf(m.id);
     return `
     <div class="mcard is-${st}" data-cell="${m.id}">
-      <button type="button" class="mcard__btn" data-act="toggle" data-id="${m.id}" role="checkbox" aria-checked="${st === 'liked'}" aria-label="${esc(m.title)}: ${esc(cardOf(m, lang))}. ${stText}">
+      <button type="button" class="mcard__btn" data-act="toggle" data-id="${m.id}" role="checkbox" aria-checked="${st === 'liked'}" aria-label="${esc(m.title)}: ${esc(m.card)}. ${stText}">
         ${moodSlot(m, { priority: i < 4 })}
         <span class="mcard__veil"></span>
-        <span class="mcard__body"><span class="mcard__title">${esc(m.title)}</span><span class="mcard__hint">${esc(cardOf(m, lang))}</span></span>
+        <span class="mcard__body"><span class="mcard__title">${esc(m.title)}</span><span class="mcard__hint">${esc(m.card)}</span></span>
         <span class="mcard__check" aria-hidden="true">${mark}</span>
       </button>
       <button type="button" class="mcard__info" data-act="info" data-id="${m.id}" aria-label="Подробнее: ${esc(m.title)}"><span>i</span></button>
@@ -97,8 +105,7 @@ export function mount(root, ctx) {
     const list = moods.filter((m) => group === 'all' || m.group === group);
     viewSlot.innerHTML = `<div class="mgrid">${list.map((m, i) => cell(m, i)).join('')}</div>`;
   };
-  // Номера приоритета меняются у всех выбранных. Обновляем только отметки и подписи —
-  // фото не пересоздаются, поэтому карточки не мигают и не меняют тон при выборе.
+  // Обновляем только отметки — фото не пересоздаются, карточки не мигают при выборе.
   const refreshCatalog = () => {
     viewSlot.querySelectorAll('[data-cell]').forEach((el) => {
       const m = byId.get(el.dataset.cell);
@@ -106,8 +113,8 @@ export function mount(root, ctx) {
       el.className = `mcard is-${st}`;
       const btn = el.querySelector('.mcard__btn');
       btn.setAttribute('aria-checked', String(st === 'liked'));
-      btn.setAttribute('aria-label', `${m.title}: ${cardOf(m, lang)}. ${stText}`);
-      el.querySelector('.mcard__check').textContent = mark;
+      btn.setAttribute('aria-label', `${m.title}: ${m.card}. ${stText}`);
+      el.querySelector('.mcard__check').innerHTML = mark;
     });
   };
 
@@ -121,45 +128,42 @@ export function mount(root, ctx) {
       viewSlot.innerHTML = `
         <div class="deck-empty">
           <p class="display h3">${mode === 'revisit' ? 'Отложенных больше нет' : 'Все образы просмотрены'}</p>
-          <p class="muted">${Sel.hasChoice(s) ? 'Можно переходить к подборке.' : 'Ничего не отмечено — можно вернуться к отложенным или открыть каталог.'}</p>
+          <p class="muted">${Sel.canProceed(s) ? 'Можно подбирать ароматы.' : needText(Sel.missing(s)) + '.'}</p>
           <div class="chips">
-            ${s.rejected.length || s.maybe.length ? '<button type="button" class="chip" data-act="revisit">Вернуться к отложенным</button>' : ''}
+            ${s.rejected.length || s.maybe.length ? '<button type="button" class="chip" data-act="revisit">К отложенным</button>' : ''}
             <button type="button" class="chip" data-act="view" data-view="catalog">Открыть каталог</button>
           </div>
         </div>`;
       return;
     }
-    const decided = Sel.decidedCount(sel());
-    const counter = mode === 'revisit' ? `отложенные · ${list.length}` : `${pad2(Math.min(decided + 1, ids.length))} / ${ids.length}`;
     viewSlot.innerHTML = `
       <div class="deck">
         <div class="deck__stack">
           ${list.slice(0, 3).reverse().map((id, k, arr) => {
             const depth = arr.length - 1 - k;
             const m = byId.get(id);
-            return `<div class="deck__card" data-depth="${depth}" data-id="${id}" ${depth === 0 ? `tabindex="0" role="group" aria-label="${esc(m.title)}. Стрелка вправо — моё, влево — не моё, вверх — возможно"` : 'aria-hidden="true"'}>
+            return `<div class="deck__card" data-depth="${depth}" data-id="${id}" ${depth === 0 ? `tabindex="0" role="group" aria-label="${esc(m.title)}. Стрелка вправо — нравится, влево — не нравится, вверх — отложить"` : 'aria-hidden="true"'}>
               ${moodSlot(m, { sizes: '(min-width: 720px) 480px, 90vw', priority: depth === 0 })}
               <div class="deck__veil"></div>
               <div class="deck__body">
                 <p class="deck__title">${esc(m.title)}</p>
-                <p class="deck__hint">${esc(cardOf(m, lang))}</p>
-                <p class="deck__story">${esc(detailOf(m, lang))}</p>
+                <p class="deck__hint">${esc(m.card)}</p>
               </div>
               ${depth === 0 ? `<button type="button" class="mcard__info deck__info" data-act="info" data-id="${id}" aria-label="Подробнее: ${esc(m.title)}"><span>i</span></button>` : ''}
-              <span class="deck__stamp deck__stamp--like" aria-hidden="true">Моё</span>
-              <span class="deck__stamp deck__stamp--nope" aria-hidden="true">Не моё</span>
-              <span class="deck__stamp deck__stamp--maybe" aria-hidden="true">Возможно</span>
+              <span class="deck__stamp deck__stamp--like" aria-hidden="true">Нравится</span>
+              <span class="deck__stamp deck__stamp--nope" aria-hidden="true">Не нравится</span>
+              <span class="deck__stamp deck__stamp--maybe" aria-hidden="true">Отложить</span>
             </div>`;
           }).join('')}
         </div>
-        <div class="deck__meta"><span>${counter}</span>
+        <div class="deck__meta">
           ${mode === 'new' && (sel().rejected.length || sel().maybe.length) ? '<button type="button" class="btn btn--text" data-act="revisit">К отложенным</button>' : ''}
           ${mode === 'revisit' ? '<button type="button" class="btn btn--text" data-act="fresh">К новым</button>' : ''}
         </div>
         <div class="deck__controls">
-          <button type="button" class="deck__btn" data-act="swipe" data-dir="nope"><span class="deck__icon">${icons.nope}</span>Не моё</button>
-          <button type="button" class="deck__btn deck__btn--small" data-act="swipe" data-dir="maybe"><span class="deck__icon">${icons.maybe}</span>Возможно</button>
-          <button type="button" class="deck__btn deck__btn--like" data-act="swipe" data-dir="like"><span class="deck__icon">${icons.like}</span>Моё</button>
+          <button type="button" class="deck__btn deck__btn--nope" data-act="swipe" data-dir="nope" aria-label="Не нравится" title="Не нравится"><span class="deck__icon">${deckIcons.nope}</span></button>
+          <button type="button" class="deck__btn deck__btn--small" data-act="swipe" data-dir="maybe" aria-label="Отложить" title="Отложить"><span class="deck__icon">${deckIcons.maybe}</span></button>
+          <button type="button" class="deck__btn deck__btn--like" data-act="swipe" data-dir="like" aria-label="Нравится" title="Нравится"><span class="deck__icon">${deckIcons.like}</span></button>
         </div>
       </div>`;
     attachDrag();
@@ -185,17 +189,22 @@ export function mount(root, ctx) {
     }
     const h = Math.max(220, Math.min(600, avail, viewSlot.clientWidth * 1.25));
     stack.style.height = `${Math.round(h)}px`;
-    stack.classList.toggle('is-compact', h < 330);
   }
   const onResize = () => fitDeck(false);
   window.addEventListener('resize', onResize);
+
+  // Возврат карточки на место (например, если отмечено уже 7 и новая отметка не добавляется).
+  const snapBack = (card) => {
+    card.style.transform = '';
+    ['--like', '--nope', '--maybe'].forEach((v) => card.style.setProperty(v, 0));
+    viewSlot.querySelector('.deck__card[data-depth="1"]')?.style.setProperty('--promote', '0');
+  };
 
   function decide(id, dir) {
     if (dir === 'like') {
       const r = Sel.like(sel(), id);
       setSel(r.sel);
-      if (r.overflow) toast('Основных образов уже три — этот отмечен как «возможно»');
-      else if (r.sel.liked.length === Sel.MAX_LIKED) toast('Три образа выбраны — можно переходить к подборке');
+      afterLike(r);
     }
     if (dir === 'maybe') setSel(Sel.maybe(sel(), id));
     if (dir === 'nope') setSel(Sel.reject(sel(), id));
@@ -203,6 +212,10 @@ export function mount(root, ctx) {
 
   function fly(card, dir) {
     const id = card.dataset.id;
+    if (dir === 'like' && Sel.like(sel(), id).full) {
+      snapBack(card);
+      return toast(FULL_MSG);
+    }
     if (reducedMotion()) { decide(id, dir); return renderSwipe(); }
     const x = dir === 'like' ? 1 : dir === 'nope' ? -1 : 0;
     card.style.transform = dir === 'maybe' ? 'translate(0, -110%) scale(0.94)' : `translate(${x * 120}%, 3%) rotate(${x * 8}deg)`;
@@ -242,9 +255,7 @@ export function mount(root, ctx) {
       if (dx > SWIPE_COMMIT || (fast && dx > 0)) return fly(card, 'like');
       if (dx < -SWIPE_COMMIT || (fast && dx < 0)) return fly(card, 'nope');
       if (dy < -SWIPE_COMMIT) return fly(card, 'maybe');
-      card.style.transform = '';
-      ['--like', '--nope', '--maybe'].forEach((v) => card.style.setProperty(v, 0));
-      next?.style.setProperty('--promote', '0');
+      snapBack(card);
     };
     card.addEventListener('pointerup', end);
     card.addEventListener('pointercancel', end);
@@ -271,15 +282,15 @@ export function mount(root, ctx) {
     openSheet({
       title: m.title,
       html: `<div class="pd">
-        <div class="pd__media">${slot({ tone: m.tone, motif: m.motif, src: m.image?.src, alt: m.image?.alt, ratio: '16 / 10' })}</div>
-        <div class="pd__head"><p class="eyebrow">Образ</p><h2 class="pd__name">${esc(m.title)}</h2><p class="pcard__short">${esc(cardOf(m, lang))}</p></div>
-        <section class="pd__sec"><p class="eyebrow">Какой запах ждать</p><p class="pd__plain">${esc(detailOf(m, lang))}</p><p class="small muted">Образ — направление. Это не значит, что каждый подобранный аромат буквально пахнет всем перечисленным.</p></section>
+        <div class="pd__media">${slot({ tone: m.tone, motif: m.motif, src: m.image?.src, srcset: m.image?.srcset, alt: m.image?.alt, ratio: '16 / 10' })}</div>
+        <div class="pd__head"><h2 class="pd__name">${esc(m.title)}</h2><p class="pcard__short">${esc(m.card)}</p></div>
+        <p class="pd__plain">${esc(m.detail)}</p>
       </div>`,
-      foot: `<button type="button" class="btn btn--primary btn--block" data-pick="${m.id}" ${st === 'liked' ? 'disabled' : ''}>${st === 'liked' ? 'Уже выбран' : 'Это моё'}</button>`,
+      foot: `<button type="button" class="btn btn--primary btn--block" data-pick="${m.id}" ${st === 'liked' ? 'disabled' : ''}>${st === 'liked' ? 'Уже выбран' : 'Нравится'}</button>`,
       onMount: (panel) => panel.querySelector('[data-pick]')?.addEventListener('click', () => {
         const r = Sel.like(sel(), m.id);
         setSel(r.sel);
-        if (r.overflow) toast('Основных образов уже три — этот отмечен как «возможно»');
+        afterLike(r);
         closeSheet();
         refreshView();
       }),
@@ -303,8 +314,8 @@ export function mount(root, ctx) {
     if (act === 'toggle') {
       const r = Sel.toggleLike(sel(), id);
       setSel(r.sel);
-      if (r.overflow) toast('Можно выбрать до трёх — этот отмечен как «возможно»');
-      refreshCatalog(id);
+      afterLike(r);
+      refreshCatalog();
     }
     if (act === 'info') openInfo(byId.get(id));
     if (act === 'unlike') {
@@ -319,7 +330,7 @@ export function mount(root, ctx) {
       ctx.store.update((s) => ({ ...s, swipeMode: act === 'revisit' ? 'revisit' : 'new' }));
       renderSwipe();
     }
-    if (act === 'next') ctx.nav('finish');
+    if (act === 'next' && Sel.canProceed(sel())) ctx.nav('finish');
   };
 
   const unsub = ctx.store.subscribe(renderTray);
