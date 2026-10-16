@@ -266,10 +266,3 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; scroll-behavior: auto !important; }
 }
-
-/* Вкладка «Галерея ароматов» в шапке: на компьютере с подписью, на телефоне — значок */
-.icon-btn__label { display: none; }
-@media (min-width: 900px) {
-  .icon-btn--label { width: auto; padding: 0 16px 0 12px; gap: 8px; display: inline-flex; border-radius: 999px; font-size: 13px; font-weight: 500; }
-  .icon-btn--label .icon-btn__label { display: inline; }
-}

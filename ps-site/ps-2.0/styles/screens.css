@@ -91,28 +91,13 @@
   .bigcard__text { font-size: 15px; max-width: 30ch; }
 }
 
-/* Выбор пути: на телефоне три карточки друг под другом, на компьютере — две сверху и широкая галерея под ними */
+/* Выбор пути: на телефоне карточки друг под другом, на компьютере — рядом */
 .bigcards--choose { grid-template-columns: 1fr; }
 .bigcards--choose .bigcard { aspect-ratio: 16 / 9; }
 .bigcard--wide { grid-column: 1 / -1; }
-.bigcard--gallery {
-  aspect-ratio: auto; min-height: 196px;
-  background: linear-gradient(120deg, var(--surface-2), var(--surface) 55%, color-mix(in srgb, var(--accent-2) 14%, var(--surface)));
-  border-color: var(--line-2);
-}
-.bigcard--gallery .bigcard__title, .bigcard--gallery .bigcard__text, .bigcard--gallery .bigcard__meta { max-width: 62%; }
-.bigcard--gallery .bigcard__meta { text-transform: none; letter-spacing: 0.02em; font-size: 12px; }
-.schema--shelf { left: auto; right: 7%; top: auto; bottom: 18%; transform: none; display: flex; align-items: flex-end; gap: 7px; height: 46%; }
-.schema--shelf i { width: 13px; border: 1px solid var(--line-3); border-radius: 4px 4px 2px 2px; background: color-mix(in srgb, var(--text) 4%, transparent); }
-.schema--shelf i:nth-child(1) { height: 62%; } .schema--shelf i:nth-child(2) { height: 88%; border-color: var(--accent); }
-.schema--shelf i:nth-child(3) { height: 54%; } .schema--shelf i:nth-child(4) { height: 76%; }
-.schema--shelf i:nth-child(5) { height: 100%; } .schema--shelf i:nth-child(6) { height: 68%; }
-.schema--shelf::after { content: ''; position: absolute; left: -10px; right: -10px; bottom: -6px; border-top: 1px solid var(--line-2); }
 @media (min-width: 720px) {
   .bigcards--choose { grid-template-columns: 1fr 1fr; }
   .bigcards--choose .bigcard { aspect-ratio: 4 / 3.4; }
-  .bigcards--choose .bigcard--gallery { aspect-ratio: auto; min-height: 230px; }
-  .schema--shelf { gap: 12px; } .schema--shelf i { width: 20px; }
 }
 
 /* Схемы на карточках «Каталог / По одной» — только линии, без картинок */
@@ -307,7 +292,7 @@
 .pcard__media .slot { --ratio: 16 / 10; }
 .pcard__tag { position: absolute; left: 14px; top: 14px; z-index: 2; padding: 6px 10px; border-radius: 999px; background: color-mix(in srgb, var(--bg) 55%, transparent); border: 1px solid var(--line-2); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .pcard__tag--disc { border-color: var(--accent); color: var(--accent); }
-.pcard__body { display: grid; gap: 8px; padding: 16px 18px 18px; }
+.pcard__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 16px 18px 18px; }
 .pcard__brand { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 .pcard__name { font: 500 30px/1 var(--font-display); }
 .pcard__type { color: var(--muted); font-size: 13px; }
@@ -315,8 +300,8 @@
 .pcard__price { font-size: 13px; color: var(--text-2); }
 .pcard__price span { color: var(--muted); }
 .pcard__label { font-size: 12px; color: var(--accent); letter-spacing: 0.04em; }
-.pcard__actions { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-.pcard__actions .btn--sm { flex: 1; }
+.pcard__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.pcard__actions .btn--sm { flex: 1 1 auto; }
 
 .plist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .prow { border-bottom: 1px solid var(--line); opacity: 0; animation: rise 420ms var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 40ms); }
@@ -371,52 +356,6 @@
 .settings { display: grid; gap: 22px; padding-top: 8px; }
 .settings__item { display: grid; gap: 10px; }
 
-/* ================= Галерея ароматов ================= */
-.gsearch { margin-bottom: 18px; }
-.gfilters { display: grid; gap: 14px; }
-.frow { display: grid; gap: 8px; min-width: 0; }
-.frow__label { font: 500 11px/1.3 var(--font-ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.frow__note { font-size: 12px; color: var(--muted); }
-.gmore-toggle { margin: 16px 0 4px; }
-.gmore { display: grid; gap: 16px; padding: 16px; margin-top: 10px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); }
-.gselect {
-  width: 100%; min-height: 46px; padding: 0 40px 0 14px;
-  border-radius: var(--r-sm); border: 1px solid var(--line-2);
-  background: var(--bg-raise) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='1.6'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 12px center / 18px;
-  color: var(--text); font: inherit; font-size: 15px; appearance: none; -webkit-appearance: none;
-}
-.gselect:focus { outline: none; border-color: var(--accent); }
-.gselect--sm { width: auto; min-height: 40px; font-size: 14px; }
-.gactive { margin-top: 14px; }
-.gactive:empty { display: none; }
-.gbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px 0 14px; padding-top: 16px; border-top: 1px solid var(--line); }
-.gcount { flex: 1 0 auto; color: var(--text-2); font-size: 14px; }
-.gcount b { font: 500 22px/1 var(--font-display); color: var(--text); margin-right: 4px; }
-.gmore-list { display: flex; justify-content: center; margin-top: 20px; }
-.gcta { margin-top: 36px; }
-@media (min-width: 900px) { .gfilters { grid-template-columns: 1fr 1fr; column-gap: 28px; } .gmore { grid-template-columns: 1fr 1fr; column-gap: 28px; } }
-
-.prow--save { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; }
-.prow__save { width: 44px; height: 44px; }
-.prow__save[aria-pressed='true'] { color: var(--accent); border-color: var(--accent); }
-.pcard .icon-btn[aria-pressed='true'] { color: var(--accent); border-color: var(--accent); }
-.deck__info { top: 8px; left: 8px; }
-.deck__story { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-/* ---- Исправления по аудиту вёрстки (320–1440 px) ---- */
-.bigcards > *, .pgrid > *, .mgrid > *, .tiers > * { min-width: 0; }
-.pcard__body { grid-template-columns: minmax(0, 1fr); }
-.pcard__actions { flex-wrap: wrap; }
-.pcard__actions .btn--sm { flex: 1 1 auto; min-width: 0; padding: 0 14px; }
-.gbar .gselect--sm { flex: 1 1 150px; min-width: 0; max-width: 100%; }
-.gbar .gcount { flex: 1 0 100%; }
-@media (min-width: 560px) { .gbar .gcount { flex: 1 0 auto; } .gbar .gselect--sm { flex: 0 1 auto; } }
-.seg--full .seg__btn { min-width: 0; padding: 0 6px; }
-.frow, .gmore > * { min-width: 0; }.bigcards--choose .bigcard--gallery { aspect-ratio: auto; }
-/* Маленькая карточка «по одной» (низкий экран): подробное описание прячем, оно есть по кнопке «i». */
-.deck__stack.is-compact .deck__story { display: none; }
-.mcard__title { font-size: clamp(17px, 5.4vw, 21px); overflow-wrap: break-word; hyphens: auto; }
-@media (min-width: 720px) { .mcard__title { font-size: 24px; } }
-
 /* ================= Боковой декор широких экранов ================= */
 /* Только фон: за контентом, без нажатий, без горизонтальной прокрутки. На узких экранах скрыт. */
 .app { position: relative; z-index: 1; }
@@ -461,48 +400,6 @@
   }
 }
 
-/* ================= Выбор языка описаний ================= */
-.langpick { margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
-.langpick__opts { display: grid; gap: 10px; margin-top: 6px; }
-@media (min-width: 720px) { .langpick__opts { grid-template-columns: 1fr 1fr; } }
-.langopt {
-  display: grid; gap: 8px; text-align: left; padding: 16px 18px;
-  border-radius: var(--r); border: 1px solid var(--line-2); background: color-mix(in srgb, var(--surface) 70%, transparent);
-  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
-}
-.langopt:hover { border-color: var(--line-3); }
-.langopt[aria-pressed='true'] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
-.langopt__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.langopt__title { font: 500 22px/1.1 var(--font-display); }
-.langopt__ex { color: var(--text-2); font-size: 13px; line-height: 1.45; }
-.langopt__ex b { color: var(--text); font-weight: 500; }
-.langopt[aria-pressed='true'] .opt__mark { background: var(--text); border-color: var(--text); }
-.langopt[aria-pressed='true'] .opt__mark::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--on-primary); }
-
-.pd__sec-head { flex-wrap: wrap; }
-
-/* Затемнение только там, где текст: фото не притушиваются целиком (у светлых и тёмных снимков своё освещение). */
-.mcard__veil { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 90%, transparent) 0%, color-mix(in srgb, var(--bg) 62%, transparent) 26%, transparent 52%); }
-.deck__veil { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 94%, transparent) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 30%, transparent 58%); }
-.bigcard__veil { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 94%, transparent) 4%, color-mix(in srgb, var(--bg) 45%, transparent) 42%, transparent 66%); }
-.mcard .slot.has-img::after, .deck__card .slot.has-img::after { display: none; }
-/* Кружок выбора и «i» читаются и на светлых фото */
-.mcard__check { background: color-mix(in srgb, var(--bg) 55%, transparent); border-color: rgba(255, 255, 255, 0.75); }
-.mcard__info span { background: color-mix(in srgb, var(--bg) 55%, transparent); border-color: rgba(255, 255, 255, 0.6); }
-
-/* Полки галереи — в правом верхнем углу, не под текстом */
-.schema--shelf { top: 58px; bottom: auto; right: 20px; height: 64px; }
-.bigcard--gallery { min-height: 230px; }
-@media (min-width: 720px) { .schema--shelf { top: auto; bottom: 26%; right: 6%; height: 46%; } }
-
-.bigcard .schema--shelf { left: auto; transform: none; }
-
-.bigcard:has(.slot.has-img) .bigcard__num { color: var(--text); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7); }
-.bigcard:has(.slot.has-img) .bigcard__arrow { background: color-mix(in srgb, var(--bg) 45%, transparent); }
-
-.bigcard__title { font-size: clamp(20px, 6.6vw, 40px); overflow-wrap: break-word; hyphens: auto; }
-.bigcards--choose .bigcard__title { font-size: clamp(26px, 8vw, 40px); }
-
 /* Задники: одно широкое фото — слева его левая часть, справа правая. Почти незаметно, только атмосфера. */
 @media (min-width: 1100px) {
   .decor__side { opacity: calc(var(--decor-o, 0) * 0.5); }
@@ -517,17 +414,6 @@
   border: 1px solid rgba(255, 255, 255, 0.22); border-bottom: 0; border-radius: 14px 14px 0 0; transform: translateY(-4px) scale(0.96); opacity: 0.8; }
 .bigcard--feel .bigcard__veil { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 94%, transparent) 6%, color-mix(in srgb, var(--bg) 55%, transparent) 46%, color-mix(in srgb, var(--bg) 10%, transparent) 75%); }
 
-/* Фото на карточках способа подбора и галереи */
-.slot--gallery { position: absolute; inset: 0; aspect-ratio: auto; z-index: -1; }
-.bigcard--gallery:has(.slot--gallery) .bigcard__veil { background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 72%, transparent) 38%, color-mix(in srgb, var(--bg) 8%, transparent) 78%); }
-@media (max-width: 719px) {
-  .bigcard--gallery:has(.slot--gallery) .bigcard__veil { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 94%, transparent) 10%, color-mix(in srgb, var(--bg) 55%, transparent) 55%, color-mix(in srgb, var(--bg) 15%, transparent) 85%); }
-  .bigcard--gallery:has(.slot--gallery) { min-height: 280px; }
-  .bigcard--gallery .bigcard__title, .bigcard--gallery .bigcard__text, .bigcard--gallery .bigcard__meta { max-width: none; }
-}
-.gbanner { margin: 0 0 20px; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
-.gbanner .slot { --ratio: 16 / 8; }
-@media (min-width: 720px) { .gbanner .slot { --ratio: 21 / 7; } }
 
 /* Уровни: EDT — бледный тон, EDP — насыщеннее, Le Parfum — премиальный акцент (акцент + тёплый второй цвет режима). */
 :root, html[data-theme='male'] { --tier-edt: #aac4da; --tier-edp: #6f97bd; }
@@ -554,3 +440,29 @@ html[data-theme='female'] { --tier-edt: #e8c8d3; --tier-edp: #cf8aa6; }
 /* EDT чуть заметнее: бледный, но читаемый оттенок */
 .tier[data-tier='edt'] { border-color: color-mix(in srgb, var(--tier-edt) 55%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--tier-edt) 13%, var(--surface)), var(--surface) 70%); }
 .tier[data-tier='edt'] .tier__name { color: color-mix(in srgb, var(--tier-edt) 92%, var(--text)); }
+
+/* ---- Кнопки под карточками «по одной»: только иконки, крупные, удобные для большого пальца ---- */
+.deck__controls { gap: 22px; align-items: center; }
+.deck__btn { gap: 0; }
+.deck__icon { width: 68px; height: 68px; border-width: 1.5px; transition: transform 140ms var(--ease), background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease); }
+.deck__icon svg { width: 30px; height: 30px; }
+.deck__btn--small .deck__icon { width: 56px; height: 56px; margin-top: 0; }
+.deck__btn--small .deck__icon svg { width: 28px; height: 28px; }
+.deck__btn--nope .deck__icon { color: var(--text); }
+.deck__btn--small .deck__icon { color: var(--accent); }
+.deck__btn--like .deck__icon svg { width: 32px; height: 32px; }
+.deck__btn:hover .deck__icon { border-color: var(--line-3); box-shadow: 0 0 0 6px color-mix(in srgb, var(--text) 5%, transparent); }
+.deck__btn:active .deck__icon { transform: scale(0.9); background-color: color-mix(in srgb, var(--text) 12%, transparent); }
+.deck__btn--like:active .deck__icon { background-color: color-mix(in srgb, var(--text) 82%, var(--accent)); }
+.deck__btn:focus-visible { outline: none; }
+.deck__btn:focus-visible .deck__icon { outline: 2px solid var(--accent); outline-offset: 3px; }
+.deck__meta:empty { display: none; }
+
+/* Отметки в каталоге: галочка вместо номера */
+.mcard__check svg { width: 15px; height: 15px; }
+
+/* Почему подходит — одной строкой в карточке и в списке */
+.pcard__why { color: var(--muted); font-size: 13px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.prow__meta { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.mcard__title { font-size: clamp(16px, 5vw, 21px); }
+@media (min-width: 720px) { .mcard__title { font-size: 24px; } }

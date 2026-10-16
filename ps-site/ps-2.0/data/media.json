@@ -15,7 +15,6 @@
     "moods": { "src": "images/method/moods-1086.webp", "srcset": "images/method/moods-540.webp 540w, images/method/moods-1086.webp 1086w", "alt": "Вязаная ткань, небольшой флакон, камень и дерево в мягком свете", "focus": "50% 45%" },
     "quiz": { "src": "images/method/quiz-1086.webp", "srcset": "images/method/quiz-540.webp 540w, images/method/quiz-1086.webp 1086w", "alt": "Лист с вопросами, ручка и флакон на деревянном столе", "focus": "50% 40%" }
   },
-  "gallery": { "src": "images/gallery/cover-1086.webp", "srcset": "images/gallery/cover-540.webp 540w, images/gallery/cover-1086.webp 1086w", "alt": "Флаконы без марок на травертине, цедра, лепестки и ваниль", "focus": "50% 52%" },
   "feel": {
     "note": "Экран «Как смотреть образы»: 4 фото в карточке «Каталог образов» и одно — в «Карточки по одной». ID образов из moods-display.json.",
     "male": { "catalog": ["m-coffee-books", "m-bar-midnight", "m-dark-suit", "m-evening-trail"], "single": "m-night-city" },

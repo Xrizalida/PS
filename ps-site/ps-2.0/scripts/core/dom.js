@@ -50,4 +50,14 @@ export const icons = {
   maybe: svg('<path d="M12 5l7 7-7 7-7-7z"/>'),
   like: svg('<path d="M12 19s-6-3.8-6-8.6A3.4 3.4 0 0 1 12 8.2a3.4 3.4 0 0 1 6 2.2c0 4.8-6 8.6-6 8.6z"/>'),
   chevron: svg('<path d="M9 6l6 6-6 6"/>'),
+  check: svg('<path d="M6 12.5l4 4 8-9"/>', ' stroke-width="2.2"'),
+};
+
+// Крупные иконки кнопок под карточками «по одной»: толще линии, понятны без подписей.
+const bold = (d, w = 2.4) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+export const deckIcons = {
+  nope: bold('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>', 2.6),
+  maybe: bold('<circle cx="12" cy="12" r="8.6" stroke-width="1.6"/><path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.8"/><path d="M12 16.6h.01" stroke-width="2.8"/>', 2.1),
+  like: bold('<path d="M12 19.5s-7.2-4.4-7.2-10.1A4 4 0 0 1 12 7.1a4 4 0 0 1 7.2 2.3c0 5.7-7.2 10.1-7.2 10.1z"/>', 2.3),
 };
