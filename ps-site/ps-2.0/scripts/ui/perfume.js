@@ -1,16 +1,16 @@
 // Аромат в PS 2.0: карточка, строка списка, подробности, сохранённое и сравнение.
-// Один язык — простые слова. Ноты остаются в данных и объясняются по-человечески (словарь нот).
+// Один язык — простые слова. Ноты остаются в каталоге для подбора, человеку показываем редакционные тексты.
 // Порядок карточек — как рассчитал алгоритм, но номера не показываем: это не жёсткий рейтинг.
 
 import { esc, icons, toast } from '../core/dom.js';
-import { typeLabel, segmentLine, presenceWords, perfumeTone, perfumeMotif } from '../core/format.js';
+import { typeLabel, segmentLine, presenceWords, perfumeTone, perfumeMotif, perfumeTexts } from '../core/format.js';
 import { slot } from './slot.js';
 import { openSheet, closeSheet } from './sheet.js';
 
 const MAX_COMPARE = 3;
 
-const textOf = (p, ctx, key) => ctx.display.perfumes[p.id]?.[key] ?? '';
-const shortOf = (p, ctx) => textOf(p, ctx, 'short');
+const textsOf = (p, ctx) => perfumeTexts(ctx.display, p.id);
+const shortOf = (p, ctx) => textsOf(p, ctx).short;
 const bottle = (p, ratio) => slot({ tone: perfumeTone(p), motif: perfumeMotif(p), ratio });
 // Главная причина, почему аромат подходит, — одной строкой.
 const reasonOf = (item) => item?.why?.[0] ?? '';
@@ -59,25 +59,17 @@ export function perfumeRow(item, i, ctx) {
 
 // ---------- Подробности ----------
 
-// «Из чего складывается»: по одной понятной ноте на этап — сначала объяснение, название ноты — в скобках.
-function partsBlock(p, ctx) {
-  const n = p.notes ?? {};
-  const layers = n.single?.length ? [['Звучание', n.single]] : [['Начало', n.top], ['Сердце', n.heart], ['База', n.base]];
-  const rows = layers
-    .map(([k, list]) => [k, ctx.glossary.layer(list)[0]])
-    .filter(([, hit]) => hit)
-    .map(([k, h]) => `<li><span class="steps__k">${k}</span><span class="steps__v">${esc(h.entry.plain.charAt(0).toUpperCase() + h.entry.plain.slice(1))} <span class="muted">(${esc(h.note)})</span></span></li>`)
-    .join('');
-  return rows ? `<ul class="steps">${rows}</ul>` : '';
-}
-
+// Порядок: как пахнет → ощущение → почему подходит → учти → коротко о практичном.
+// Пирамида нот не выводится: ноты остаются в каталоге для подбора.
 function detailHtml(p, item, ctx) {
+  const t = textsOf(p, ctx);
   const why = item?.why?.length ? `<section class="pd__sec"><p class="eyebrow">Почему подходит</p><ul class="why">${item.why.slice(0, 3).map((w) => `<li>${esc(w)}</li>`).join('')}</ul></section>` : '';
-  // «Учти»: предупреждения подбора (если человек отметил «лучше без») и короткий риск PS.
+  // «Учти»: предупреждение подбора (если человек отметил «лучше без») и редакционный риск PS — не больше двух строк.
   const softWarn = (item?.warnings ?? []).filter((w) => !(p.risks ?? []).some((r) => r.text === w));
-  const warn = [...softWarn, textOf(p, ctx, 'risk')].filter(Boolean).slice(0, 2);
-  const warnHtml = warn.length ? `<section class="pd__sec"><p class="eyebrow">Учти</p><ul class="why why--warn">${warn.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></section>` : '';
+  const warn = [...softWarn, t.risk].filter(Boolean).slice(0, 2);
+  const warnHtml = warn.length ? `<section class="pd__warn"><p class="eyebrow">Учти</p>${warn.map((w) => `<p>${esc(w)}</p>`).join('')}</section>` : '';
   const disc = item?.discovery ? `<p class="note note--box">${esc(item.discovery.unexpected)} ${esc(item.discovery.tryFirst)}</p>` : '';
+  const facts = [['Заметность', presenceWords(p)], ['Когда носить', p.texts?.whenToWear], ['Цена', segmentLine(p)]].filter(([, v]) => v);
   return `
   <article class="pd">
     <div class="pd__media">${bottle(p)}</div>
@@ -87,14 +79,12 @@ function detailHtml(p, item, ctx) {
       <h2 class="pd__name">${esc(p.name)}</h2>
       <p class="pcard__type">${esc(typeLabel(p))}</p>
     </header>
-    <p class="pd__plain">${esc(textOf(p, ctx, 'plain'))}</p>
     ${disc}
+    ${t.smell ? `<section class="pd__sec"><p class="eyebrow">Как пахнет</p><p>${esc(t.smell)}</p></section>` : ''}
+    ${t.feeling ? `<section class="pd__feel"><p class="eyebrow">Ощущение</p><p>${esc(t.feeling)}</p></section>` : ''}
     ${why}
-    <section class="pd__sec"><p class="eyebrow">Как он пахнет</p><p>${esc(textOf(p, ctx, 'detail'))}</p>${partsBlock(p, ctx)}</section>
-    <section class="pd__sec"><p class="eyebrow">Заметность</p><p>${esc(presenceWords(p))}</p></section>
-    <section class="pd__sec"><p class="eyebrow">Когда носить</p><p>${esc(p.texts.whenToWear)}</p></section>
     ${warnHtml}
-    <section class="pd__sec"><p class="eyebrow">Цена</p><p>${esc(segmentLine(p))}</p></section>
+    <dl class="pd__facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
   </article>`;
 }
 

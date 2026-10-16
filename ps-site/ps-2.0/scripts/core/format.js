@@ -37,6 +37,14 @@ export function presenceWords(p) {
   return `${power}, ${trail}.`;
 }
 
+// Редакционные тексты аромата (data/perfumes-display.json): short — строка в списке, smell — «Как пахнет»,
+// feeling — «Ощущение», risk — «Учти». Если нового поля нет, smell берётся из старого detail.
+const clean = (s) => (typeof s === 'string' ? s.trim() : '');
+export function perfumeTexts(display, id) {
+  const d = display?.perfumes?.[id] ?? {};
+  return { short: clean(d.short), smell: clean(d.smell) || clean(d.detail), feeling: clean(d.feeling), risk: clean(d.risk) };
+}
+
 export const BUDGETS = [
   { id: 'budget', label: 'До 5 000 ₽' },
   { id: 'mid', label: 'До 15 000 ₽' },
