@@ -42,7 +42,11 @@ export function buildProfile(request, data) {
   }
 
   const avoid = {};
-  for (const sel of selected) {
+  // request.avoidMoodLimit (необязательно): ограничения «лучше без» берутся только из N главных образов.
+  // PS 2.0 разрешает до 7 образов — без этого запреты всех семи складывались бы и сужали подбор.
+  // Версия 1 параметр не передаёт: для неё поведение прежнее.
+  const avoidFrom = request.avoidMoodLimit ? selected.slice(0, request.avoidMoodLimit) : selected;
+  for (const sel of avoidFrom) {
     for (const [dim, { max }] of Object.entries(moodById.get(sel.id).avoid ?? {})) {
       avoid[dim] = Math.min(avoid[dim] ?? 5, max);
     }
