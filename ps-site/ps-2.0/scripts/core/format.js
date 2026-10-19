@@ -9,6 +9,11 @@ export const CONCENTRATION = {
 };
 
 export const typeLabel = (p) => CONCENTRATION[p.concentration] ?? p.concentration;
+// Концентрация и, если важно различать выпуски, пометка выпуска: «Eau de Toilette · выпуск 2020».
+export const typeLine = (p) => {
+  const ed = typeof p.edition === 'string' ? p.edition.trim() : '';
+  return ed ? `${typeLabel(p)} · ${/^\d/.test(ed) ? `выпуск ${ed}` : ed}` : typeLabel(p);
+};
 
 // Только ориентир по сегменту: проверенных цен пока нет, конкретные суммы не выдумываем.
 export const SEGMENTS = {

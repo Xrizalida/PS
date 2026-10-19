@@ -3,7 +3,7 @@
 // Порядок карточек — как рассчитал алгоритм, но номера не показываем: это не жёсткий рейтинг.
 
 import { esc, icons, toast } from '../core/dom.js';
-import { typeLabel, segmentLine, presenceWords, perfumeTone, perfumeMotif, perfumeTexts } from '../core/format.js';
+import { typeLine, segmentLine, presenceWords, perfumeTone, perfumeMotif, perfumeTexts } from '../core/format.js';
 import { slot } from './slot.js';
 import { openSheet, closeSheet } from './sheet.js';
 
@@ -77,7 +77,7 @@ function detailHtml(p, item, ctx) {
       ${item ? `<p class="eyebrow accent-dot">${esc(item.isDiscovery ? 'Открытие PS' : item.label)}</p>` : ''}
       <p class="pcard__brand">${esc(p.brand)}</p>
       <h2 class="pd__name">${esc(p.name)}</h2>
-      <p class="pcard__type">${esc(typeLabel(p))}</p>
+      <p class="pcard__type">${esc(typeLine(p))}</p>
     </header>
     ${disc}
     ${t.smell ? `<section class="pd__sec"><p class="eyebrow">Как пахнет</p><p>${esc(t.smell)}</p></section>` : ''}

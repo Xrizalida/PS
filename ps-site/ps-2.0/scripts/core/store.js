@@ -47,6 +47,19 @@ export function migrate(raw) {
   };
 }
 
+// После смены каталога убираем ссылки на исключённые карточки. Ответы обычных
+// вопросов и выбор образов сохраняются: их идентификаторы не относятся к парфюму.
+export function reconcileCatalog(state, perfumeIds, questions = []) {
+  const valid = new Set(perfumeIds);
+  const clean = (ids) => [...new Set((Array.isArray(ids) ? ids : []).filter((id) => valid.has(id)))];
+  const answers = { ...state.quiz.answers };
+  for (const q of questions) {
+    if (q.type === 'perfumes' && Array.isArray(answers[q.id])) answers[q.id] = clean(answers[q.id]);
+  }
+  const next = { ...state, saved: clean(state.saved), compare: clean(state.compare).slice(0, 3), quiz: { ...state.quiz, answers } };
+  return JSON.stringify(next) === JSON.stringify(state) ? state : next;
+}
+
 export function createStore(storage = globalThis.localStorage) {
   let state;
   try {

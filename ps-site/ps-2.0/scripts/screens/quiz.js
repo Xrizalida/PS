@@ -19,7 +19,7 @@ export function render(ctx) {
   if (q.type === 'perfumes') {
     const ids = Array.isArray(answer) ? answer : [];
     body = `
-      <div class="search"><input type="search" data-slot="search" placeholder="Например, Sauvage или Lattafa" aria-label="Поиск аромата по названию" autocomplete="off"></div>
+      <div class="search"><input type="search" data-slot="search" placeholder="Например, Layton или Lattafa" aria-label="Поиск аромата по названию" autocomplete="off"></div>
       <div class="chips" data-slot="picked" style="margin-top:12px">${ids.map((id) => `<button type="button" class="chip" aria-pressed="true" data-act="unpick" data-id="${id}">${esc(ctx.perfumeName(id))} <span class="chip__x">×</span></button>`).join('')}</div>
       <div class="found" data-slot="found"></div>`;
   } else {

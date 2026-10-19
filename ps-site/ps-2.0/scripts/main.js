@@ -1,7 +1,7 @@
 // PS 2.0 — точка входа: данные, состояние, маршруты, шапка, тема.
 // Подбор — общий детерминированный алгоритм версии 1 (scripts/engine), без ИИ и без случайности.
 
-import { createStore } from './core/store.js';
+import { createStore, reconcileCatalog } from './core/store.js';
 import { prepareData } from '../../scripts/engine/index.js';
 import { reducedMotion, toast, esc } from './core/dom.js';
 import { createGlossary } from './core/glossary.js';
@@ -58,6 +58,9 @@ async function boot() {
   const ensureData = () => {
     dataPromise ??= load('../data/catalog.json').then((catalog) => {
       data = prepareData({ catalog, moodsMale, moodsFemale, dimensions, config });
+      const before = store.get();
+      const after = reconcileCatalog(before, data.byId.keys(), questions);
+      if (after !== before) store.update(() => after);
       return data;
     });
     return dataPromise;
