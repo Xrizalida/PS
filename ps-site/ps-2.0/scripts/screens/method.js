@@ -46,7 +46,8 @@ export function mount(root, ctx) {
   const onClick = (e) => {
     const el = e.target.closest('[data-act], [data-method]');
     if (!el) return;
-    if (el.dataset.act === 'back') return ctx.nav('', { focus: 'choose' });
+    // Назад — сразу к выбору «Для кого подбираем?», без повторного вступления.
+    if (el.dataset.act === 'back') return ctx.back('choose');
     if (el.dataset.method) {
       const method = el.dataset.method;
       ctx.store.update((s) => ({ ...s, method }));

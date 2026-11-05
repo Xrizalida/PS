@@ -7,7 +7,8 @@ export const pad2 = (n) => String(n).padStart(2, '0');
 
 export const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// data-motion="reduce" — проверочные страницы так включают тот же режим без системной настройки.
+export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce';
 
 // Русское множественное число: plural(5, ['аромат', 'аромата', 'ароматов']).
 export function plural(n, forms) {

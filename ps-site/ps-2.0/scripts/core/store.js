@@ -1,8 +1,11 @@
-// Состояние PS 2.0. Хранится в браузере отдельно от версии 1 (ключ ps2-state).
+// Состояние PS 2.0 живёт только в памяти открытой страницы.
+// Переходы внутри PS, «Назад» и «Вперёд» его сохраняют; перезагрузка, новая вкладка
+// и возврат на страницу из кеша браузера начинают подбор заново (см. main.js, pageshow).
 
 import { emptySelection, MAX_LIKED } from './selection.js';
 
-export const STORAGE_KEY = 'ps2-state';
+// Раньше подбор сохранялся в localStorage под этим ключом. Больше не читаем — только удаляем свой ключ.
+export const LEGACY_STORAGE_KEY = 'ps2-state';
 const VERSION = 1;
 
 export function defaultState() {
@@ -60,24 +63,29 @@ export function reconcileCatalog(state, perfumeIds, questions = []) {
   return JSON.stringify(next) === JSON.stringify(state) ? state : next;
 }
 
-export function createStore(storage = globalThis.localStorage) {
-  let state;
+// Удаляет старое сохранение PS 2.0 — и только его: другие ключи и настройки браузера не трогаем.
+export function forgetLegacyState(storage = globalThis.localStorage) {
   try {
-    state = migrate(JSON.parse(storage?.getItem(STORAGE_KEY) ?? 'null'));
+    storage?.removeItem(LEGACY_STORAGE_KEY);
   } catch {
-    state = defaultState();
+    /* хранилище недоступно (приватный режим) — удалять нечего */
   }
+}
+
+// initial — только для проверочных страниц (?audit): готовое состояние сценария. Обычный визит начинается с чистого листа.
+export function createStore(initial = null) {
+  let state = initial ? migrate(initial) : defaultState();
   const subs = new Set();
+  const emit = () => subs.forEach((f) => f(state));
   return {
     get: () => state,
     update(fn) {
       state = fn(state);
-      try {
-        storage?.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch {
-        /* приватный режим: работаем без сохранения */
-      }
-      subs.forEach((f) => f(state));
+      emit();
+    },
+    reset() {
+      state = defaultState();
+      emit();
     },
     subscribe(f) {
       subs.add(f);

@@ -36,7 +36,7 @@ export function mount(root, ctx) {
   const onClick = (e) => {
     const el = e.target.closest('[data-act], [data-tier]');
     if (!el) return;
-    if (el.dataset.act === 'back') return ctx.nav('method');
+    if (el.dataset.act === 'back') return ctx.back('method');
     if (el.dataset.tier) {
       const tier = el.dataset.tier;
       ctx.store.update((s) => ({ ...s, tier, quiz: { ...s.quiz, index: 0 } }));

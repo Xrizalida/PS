@@ -7,9 +7,8 @@
     { "id": "scene-3", "tone": "steel", "motif": "horizon", "src": null, "srcWide": null, "alt": "" }
   ],
   "decor": {
-    "note": "Боковые задники для широких экранов (вступление, выбор пути, способ). Одно широкое фото владельца: слева видна его левая часть (камень, дерево), справа — правая (цветы, ткань).",
-    "left": { "src": "images/decor/backdrop-1672.webp", "alt": "" },
-    "right": { "src": "images/decor/backdrop-1672.webp", "alt": "" }
+    "note": "Задний план широких экранов (вступление, выбор пола, способ): одно цельное фото владельца на всю ширину — камни и дерево слева, цветы и ткань справа, тёмная середина под контентом. Пропорции сохраняются (cover), на телефонах слой скрыт.",
+    "full": { "src": "images/decor/backdrop-1672.webp", "srcset": "images/decor/backdrop-960.webp 960w, images/decor/backdrop-1672.webp 1672w", "alt": "" }
   },
   "method": {
     "moods": { "src": "images/method/moods-1086.webp", "srcset": "images/method/moods-540.webp 540w, images/method/moods-1086.webp 1086w", "alt": "Вязаная ткань, небольшой флакон, камень и дерево в мягком свете", "focus": "50% 45%" },

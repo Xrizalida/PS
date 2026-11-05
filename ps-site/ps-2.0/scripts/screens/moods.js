@@ -301,7 +301,7 @@ export function mount(root, ctx) {
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const { act, id } = el.dataset;
-    if (act === 'back') return ctx.nav('feel');
+    if (act === 'back') return ctx.back('feel');
     if (act === 'view') {
       ctx.store.update((s) => ({ ...s, moodView: el.dataset.view, swipeMode: 'new' }));
       renderView();

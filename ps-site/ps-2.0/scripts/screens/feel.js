@@ -53,7 +53,7 @@ export function mount(root, ctx) {
   const onClick = (e) => {
     const el = e.target.closest('[data-act], [data-view]');
     if (!el) return;
-    if (el.dataset.act === 'back') return ctx.nav('method');
+    if (el.dataset.act === 'back') return ctx.back('method');
     if (el.dataset.view) {
       const moodView = el.dataset.view;
       ctx.store.update((s) => ({ ...s, moodView }));

@@ -45,7 +45,7 @@ export function mount(root, ctx) {
     const el = e.target.closest('[data-act]');
     if (!el) return;
     const { act, id } = el.dataset;
-    if (act === 'back') return ctx.nav(ctx.store.get().method === 'moods' ? 'moods' : 'quiz');
+    if (act === 'back') return ctx.back(ctx.store.get().method === 'moods' ? 'moods' : 'quiz');
     if (act === 'budget') {
       ctx.store.update((s) => ({ ...s, finish: { ...s.finish, budget: id } }));
       root.querySelectorAll('[data-act="budget"]').forEach((b) => b.setAttribute('aria-pressed', String(b === el)));

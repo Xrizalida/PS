@@ -170,7 +170,8 @@ export function openSaved(ctx) {
   const html = `<div class="head"><h2 class="display h3">${ps.length ? 'Сохранённое' : 'Пока пусто'}</h2></div>
     ${ps.length
       ? ps.map((p) => `<div class="srow"><button type="button" class="srow__open" data-act="open" data-id="${p.id}"><span class="prow__brand">${esc(p.brand)}</span><span class="prow__name">${esc(p.name)}</span><span class="small muted">${esc(shortOf(p, ctx))}</span></button><button type="button" class="icon-btn" data-act="save" data-id="${p.id}" aria-label="Убрать">${icons.close}</button></div>`).join('')
-      : '<p class="muted">Нажми на сердечко на карточке аромата — он появится здесь.</p>'}`;
+      : '<p class="muted">Нажми на сердечко на карточке аромата — он появится здесь.</p>'}
+    <p class="small muted saved__note">Список живёт, пока открыта эта страница: после перезагрузки подбор начнётся заново.</p>`;
   openSheet({
     title: 'Сохранённое',
     html,

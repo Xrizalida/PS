@@ -1,8 +1,9 @@
-// Вступление: три сцены со «прилипающей» картинкой и сменой текста по ходу прокрутки, затем выбор пола.
+// Вступление: три сцены со «прилипающей» картинкой и сменой текста по ходу прокрутки, затем выбор пола (общий блок из choose.js).
 // Прокрутка естественная: ничего не перехватываем, только читаем её положение.
 
 import { esc, icons, clamp, reducedMotion } from '../core/dom.js';
 import { slot } from '../ui/slot.js';
+import { chooseSection, bindChoose } from './choose.js';
 
 const SCENES = [
   { eyebrow: 'PS. — Parfum Selection', title: 'Не выбирай ноты. Выбирай ощущения.', lead: 'Подбор аромата по настроению.' },
@@ -12,19 +13,6 @@ const SCENES = [
 
 export function render(ctx) {
   const media = ctx.display.media;
-  const g = ctx.state.gender;
-  const genderCard = (id, i, title, text) => {
-    const m = media.gender[id];
-    return `
-    <button type="button" class="bigcard" data-gender="${id}" aria-pressed="${g === id}">
-      ${slot({ tone: m.tone, motif: m.motif, src: m.src, srcset: m.srcset, focus: m.focus, alt: m.alt, sizes: '(min-width: 720px) 50vw, 100vw' })}
-      <span class="bigcard__veil"></span>
-      <span class="bigcard__num">0${i}</span>
-      <span class="bigcard__arrow">${icons.arrow}</span>
-      <span class="bigcard__title display">${title}</span>
-      <span class="bigcard__text">${text}</span>
-    </button>`;
-  };
   return `
   <section class="story" data-story style="--scenes:${SCENES.length}" aria-label="О PS">
     <div class="story__stage">
@@ -53,19 +41,7 @@ export function render(ctx) {
     </div>
   </section>
 
-  <section class="choose" id="choose" aria-labelledby="choose-title">
-    <div class="wrap">
-      <div class="head">
-        <p class="eyebrow">Шаг 1</p>
-        <h2 class="display h2" id="choose-title">Для кого подбираем?</h2>
-        <p class="lead">Унисекс попадает в обе подборки.</p>
-      </div>
-      <div class="bigcards bigcards--choose">
-        ${genderCard('male', 1, 'Мужское', 'Дерево, кожа, прохлада, вечерний город')}
-        ${genderCard('female', 2, 'Женское', 'Ткани, тёплый свет, цветы, пудра')}
-      </div>
-    </div>
-  </section>`;
+  ${chooseSection(ctx)}`;
 }
 
 export function mount(root, ctx) {
@@ -109,29 +85,18 @@ export function mount(root, ctx) {
     window.addEventListener('resize', update);
   }
 
-  if (ctx.params.focus === 'choose') {
-    setTimeout(() => root.querySelector('#choose')?.scrollIntoView({ block: 'start' }), 0);
-  }
-
   const onClick = (e) => {
-    const el = e.target.closest('[data-act], [data-gender]');
+    const el = e.target.closest('[data-act="skip"]');
     if (!el) return;
-    if (el.dataset.act === 'skip') {
-      if (ctx.store.get().gender) return ctx.nav('method');
-      root.querySelector('#choose').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
-    }
-    if (el.dataset.gender) {
-      const gender = el.dataset.gender;
-      root.querySelectorAll('[data-gender]').forEach((b) => b.setAttribute('aria-pressed', String(b === el)));
-      ctx.store.update((s) => ({ ...s, gender }));
-      // Короткая пауза, чтобы было видно, как палитра перетекает в выбранный режим.
-      setTimeout(() => ctx.nav('method'), still ? 0 : 420);
-    }
+    if (ctx.store.get().gender) return ctx.nav('method');
+    root.querySelector('#choose').scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
   };
   root.addEventListener('click', onClick);
+  const unbindChoose = bindChoose(root, ctx, { fromIntro: true });
   return () => {
     window.removeEventListener('scroll', update);
     window.removeEventListener('resize', update);
     root.removeEventListener('click', onClick);
+    unbindChoose();
   };
 }

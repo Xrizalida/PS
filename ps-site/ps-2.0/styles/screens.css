@@ -55,7 +55,19 @@
 .story.is-static .story__bars, .story.is-static .story__hint { display: none; }
 
 /* ================= Выбор пола ================= */
-.choose { padding: 56px 0 64px; scroll-margin-top: var(--hdr); }
+/* Выбор занимает весь экран; прозрачная шапка лежит поверх его верхнего отступа (он равен высоте шапки),
+   поэтому заголовок и карточки центрируются в видимой области под ней. Во вступлении после прокрутки
+   к выбору сцена со своими индикаторами целиком уходит за верх экрана. На отдельном экране #/choose
+   секция стоит так же (поднята под шапку), поэтому возврат «Назад» выглядит точно как конец вступления.
+   Если экран низкий, секция просто растёт и прокручивается — карточки не обрезаются. */
+.choose {
+  position: relative;
+  min-height: 100svh;
+  display: grid; align-content: center;
+  padding: calc(var(--hdr) + 24px) 0 40px;
+}
+.choose--screen { margin-top: calc(-1 * var(--hdr)); }
+.choose__inner { position: relative; }
 .choose .head { margin-bottom: 26px; }
 
 /* ================= Большие карточки (фирменный элемент PS) ================= */
@@ -91,13 +103,14 @@
   .bigcard__text { font-size: 15px; max-width: 30ch; }
 }
 
-/* Выбор пути: на телефоне карточки друг под другом, на компьютере — рядом */
+/* Выбор пола: на телефоне карточки друг под другом, на компьютере — рядом.
+   На компьютере высота карточек подстраивается под экран, чтобы заголовок и обе карточки помещались целиком. */
 .bigcards--choose { grid-template-columns: 1fr; }
 .bigcards--choose .bigcard { aspect-ratio: 16 / 9; }
 .bigcard--wide { grid-column: 1 / -1; }
 @media (min-width: 720px) {
   .bigcards--choose { grid-template-columns: 1fr 1fr; }
-  .bigcards--choose .bigcard { aspect-ratio: 4 / 3.4; }
+  .bigcards--choose .bigcard { aspect-ratio: auto; height: clamp(260px, calc(100svh - var(--hdr) - 280px), 480px); }
 }
 
 /* Схемы на карточках «Каталог / По одной» — только линии, без картинок */
@@ -359,59 +372,54 @@
 /* Сохранённое и настройки */
 .srow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
 .srow__open { flex: 1; text-align: left; display: grid; gap: 2px; }
+.saved__note { margin-top: 18px; }
 .settings { display: grid; gap: 22px; padding-top: 8px; }
 .settings__item { display: grid; gap: 10px; }
 
-/* ================= Боковой декор широких экранов ================= */
-/* Только фон: за контентом, без нажатий, без горизонтальной прокрутки. На узких экранах скрыт. */
+/* ================= Задний план широких экранов ================= */
+/* Одно цельное фото владельца за контентом: камни и дерево слева, цветы и ткань справа, тёмная середина.
+   cover сохраняет пропорции и композицию; верх и низ мягко уходят в фон — без прямоугольного края.
+   Только фон: без нажатий и горизонтальной прокрутки. На узких экранах скрыт (и не скачивается — loading="lazy"). */
 .app { position: relative; z-index: 1; }
 .decor { display: none; }
 @media (min-width: 1100px) {
   html[data-decor='on'] .decor { display: block; position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-  .decor__side {
-    position: absolute; top: 0; bottom: 0; width: clamp(220px, calc((100vw - var(--maxw)) / 2 + 170px), 460px);
-    opacity: calc(var(--decor-o, 0) * 0.9);
+  .decor__img {
+    position: absolute; inset: 0;
+    opacity: calc(var(--decor-o, 0) * 0.8);
     transition: opacity 260ms linear;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 84%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 84%, transparent);
   }
-  .decor__side img { width: 100%; height: 100%; object-fit: cover; }
-  .decor__side--left {
-    left: 0;
-    -webkit-mask-image: linear-gradient(90deg, #000 35%, transparent);
-    mask-image: linear-gradient(90deg, #000 35%, transparent);
+  .decor__img img {
+    width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%;
+    filter: saturate(0.9) brightness(0.82);
+    opacity: 0; transition: opacity 500ms var(--ease);
   }
-  .decor__side--right {
-    right: 0;
-    -webkit-mask-image: linear-gradient(270deg, #000 35%, transparent);
-    mask-image: linear-gradient(270deg, #000 35%, transparent);
+  .decor__img img.is-in { opacity: 1; }
+  /* Середина под заголовком и карточками остаётся спокойной. */
+  .decor__img::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 58% at 50% 52%, color-mix(in srgb, var(--bg) 72%, transparent), transparent 78%);
   }
-  /* Временные тональные слои, пока нет фото: слева — холодный камень и тёмное дерево, справа — пудра, слива, шоколад. */
-  .decor__side--left:not(.has-img) {
+  /* Пока фото нет — тональные слои: слева холодный камень и тёмное дерево, справа пудра и слива. */
+  .decor__img:not(.has-img) {
     background:
-      repeating-linear-gradient(90deg, transparent 0 46px, rgba(255, 255, 255, 0.018) 46px 47px),
-      radial-gradient(55% 35% at 18% 30%, rgba(98, 112, 126, 0.32), transparent 70%),
-      radial-gradient(60% 40% at 0% 82%, rgba(74, 58, 44, 0.42), transparent 72%),
-      linear-gradient(90deg, #121519, #0b0d10 70%, transparent);
+      radial-gradient(28% 40% at 8% 40%, rgba(98, 112, 126, 0.28), transparent 70%),
+      radial-gradient(30% 40% at 4% 85%, rgba(74, 58, 44, 0.36), transparent 72%),
+      radial-gradient(26% 36% at 92% 28%, rgba(170, 112, 128, 0.26), transparent 70%),
+      radial-gradient(30% 40% at 96% 86%, rgba(92, 56, 62, 0.36), transparent 72%);
   }
-  .decor__side--right:not(.has-img) {
-    background:
-      repeating-linear-gradient(115deg, transparent 0 60px, rgba(255, 230, 235, 0.02) 60px 62px),
-      radial-gradient(45% 30% at 84% 24%, rgba(170, 112, 128, 0.3), transparent 70%),
-      radial-gradient(60% 45% at 100% 86%, rgba(92, 56, 62, 0.42), transparent 72%),
-      linear-gradient(270deg, #1a1114, #100b0d 70%, transparent);
-  }
-  /* Во вступлении края сцены растворяются в фоне, чтобы декор обрамлял, а не перекрывал её. */
+  /* Во вступлении края сцены растворяются в фоне, чтобы задний план обрамлял её, а не перекрывал. */
   html[data-decor='on'] .scene__media {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
   }
-}
-
-/* Задники: одно широкое фото — слева его левая часть, справа правая. Почти незаметно, только атмосфера. */
-@media (min-width: 1100px) {
-  .decor__side { opacity: calc(var(--decor-o, 0) * 0.5); }
-  .decor__side img { filter: saturate(0.85) brightness(0.9); }
-  .decor__side--left img { object-position: left center; }
-  .decor__side--right img { object-position: right center; }
+  /* Стык вступления и выбора: низ сцены (цвет фона) плавно переходит в задний план, без горизонтального обрыва. */
+  .story + .choose::before {
+    content: ''; position: absolute; inset: 0 0 auto 0; height: 160px; pointer-events: none;
+    background: linear-gradient(var(--bg), transparent);
+  }
 }
 /* «Как смотреть образы»: мозаика из 4 образов и одно фото на всю карточку «по одной» */
 .feel-mosaic { position: absolute; inset: 0; z-index: -1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; }
